@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29728.190
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CloudProjectCore", "CloudProjectCore\CloudProjectCore.csproj", "{9D636953-22A2-47C1-8D8F-54D7D659FA8B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CloudProjectCore", "CloudProjectCore\CloudProjectCore.csproj", "{238D4760-E533-4C4A-B9EB-781544E86EB9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,15 +11,15 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{9D636953-22A2-47C1-8D8F-54D7D659FA8B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9D636953-22A2-47C1-8D8F-54D7D659FA8B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9D636953-22A2-47C1-8D8F-54D7D659FA8B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9D636953-22A2-47C1-8D8F-54D7D659FA8B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{238D4760-E533-4C4A-B9EB-781544E86EB9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{238D4760-E533-4C4A-B9EB-781544E86EB9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{238D4760-E533-4C4A-B9EB-781544E86EB9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{238D4760-E533-4C4A-B9EB-781544E86EB9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {B5FDA8DC-D5DB-4892-B636-ECA037A2086E}
+		SolutionGuid = {E6CC1780-2DF3-4ECC-A244-A8151160E073}
 	EndGlobalSection
 EndGlobal
