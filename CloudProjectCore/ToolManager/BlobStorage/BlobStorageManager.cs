@@ -55,8 +55,7 @@ namespace ToolManager.BlobStorage
         }
         public string GetContainerSasUri(int minutesToAdd = 1)
         {
-            if (minutesToAdd <= 0)
-                minutesToAdd = 1;
+            minutesToAdd = minutesToAdd < 0 ? 1 : minutesToAdd;
 
             string sasContainerToken;
             int timeDifferencesInMinutes = (DateTime.Now.Hour - DateTime.UtcNow.Hour) * 60;
