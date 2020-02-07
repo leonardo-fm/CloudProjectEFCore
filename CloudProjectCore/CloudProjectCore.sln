@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29728.190
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CloudProjectCore", "CloudProjectCore\CloudProjectCore.csproj", "{238D4760-E533-4C4A-B9EB-781544E86EB9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CloudProjectCore", "CloudProjectCore\CloudProjectCore.csproj", "{238D4760-E533-4C4A-B9EB-781544E86EB9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToolManager", "ToolManager\ToolManager.csproj", "{36CBAA4E-AD98-4D79-A987-6058903D2922}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{238D4760-E533-4C4A-B9EB-781544E86EB9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{238D4760-E533-4C4A-B9EB-781544E86EB9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{238D4760-E533-4C4A-B9EB-781544E86EB9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{36CBAA4E-AD98-4D79-A987-6058903D2922}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{36CBAA4E-AD98-4D79-A987-6058903D2922}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{36CBAA4E-AD98-4D79-A987-6058903D2922}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{36CBAA4E-AD98-4D79-A987-6058903D2922}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -13,6 +13,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using CloudProjectCore.Models;
+using System.Reflection;
+using System.Text;
+using System.IO;
 
 namespace CloudProjectCore
 {
