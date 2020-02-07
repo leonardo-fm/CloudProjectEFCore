@@ -8,6 +8,8 @@ namespace CloudProjectCore.Models
 {
     public class ApplicationUser : IdentityUser
     {
+        public string MyUserName { get; set; }
+
         [PersonalData]
         public string Name { get; set; }
         [PersonalData]

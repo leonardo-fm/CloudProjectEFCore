@@ -23,7 +23,7 @@ namespace CloudProjectCore.Areas.Identity.Pages.Account.Manage
             _signInManager = signInManager;
         }
 
-        public string Username { get; set; }
+        //public string Username { get; set; }
 
         [TempData]
         public string StatusMessage { get; set; }
@@ -33,16 +33,18 @@ namespace CloudProjectCore.Areas.Identity.Pages.Account.Manage
 
         public class InputModel
         {
+            [DataType(DataType.Text)]
+            [Display(Name = "Username")]
+            public string MyUserName { get; set; }
+
             [Phone]
             [Display(Name = "Phone number")]
             public string PhoneNumber { get; set; }
 
-            [Required]
             [DataType(DataType.Text)]
             [Display(Name = "Full name")]
             public string Name { get; set; }
 
-            [Required]
             [Display(Name = "Birth Date")]
             [DataType(DataType.Date)]
             public DateTime DOB { get; set; }
@@ -50,13 +52,11 @@ namespace CloudProjectCore.Areas.Identity.Pages.Account.Manage
 
         private async Task LoadAsync(ApplicationUser user)
         {
-            var userName = await _userManager.GetUserNameAsync(user);
             var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
-
-            Username = userName;
 
             Input = new InputModel
             {
+                MyUserName = user.MyUserName,
                 Name = user.Name,
                 DOB = user.DOB,
                 PhoneNumber = phoneNumber
@@ -87,6 +87,12 @@ namespace CloudProjectCore.Areas.Identity.Pages.Account.Manage
             {
                 await LoadAsync(user);
                 return Page();
+            }
+
+            if (Input.MyUserName != user.MyUserName 
+                && !string.IsNullOrEmpty(Input.MyUserName))
+            {
+                user.MyUserName = Input.MyUserName;
             }
 
             var phoneNumber = await _userManager.GetPhoneNumberAsync(user);

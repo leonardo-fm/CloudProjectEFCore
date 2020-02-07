@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace CloudProjectCore.Data.Migrations
 {
-    public partial class CustomUserData2 : Migration
+    public partial class UserAdded : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

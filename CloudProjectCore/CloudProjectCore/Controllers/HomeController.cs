@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace CloudProjectCore.Controllers
 {
+    [Authorize]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
@@ -24,7 +25,6 @@ namespace CloudProjectCore.Controllers
             return View();
         }
 
-        [Authorize]
         public IActionResult Privacy()
         {
             return View();

@@ -5,6 +5,15 @@
     <UserSecretsId>aspnet-CloudProjectCore-1C04A4D8-BB90-4037-957E-45489559344B</UserSecretsId>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Compile Remove="Data\Migrations\20200206145319_CustomUserData.cs" />
+    <Compile Remove="Data\Migrations\20200206145319_CustomUserData.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200206145644_CustomUserData2.cs" />
+    <Compile Remove="Data\Migrations\20200206145644_CustomUserData2.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200206165243_AddEmail.cs" />
+    <Compile Remove="Data\Migrations\20200206165243_AddEmail.Designer.cs" />
+  </ItemGroup>
+
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.1.1" />

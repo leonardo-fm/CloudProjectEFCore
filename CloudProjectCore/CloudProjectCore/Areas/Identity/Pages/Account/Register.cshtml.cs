@@ -52,14 +52,9 @@ namespace CloudProjectCore.Areas.Identity.Pages.Account
         public class InputModel
         {
             [Required]
-            [DataType(DataType.Text)]
-            [Display(Name = "Full name")]
-            public string Name { get; set; }
-
-            [Required]
-            [Display(Name = "Birth Date")]
-            [DataType(DataType.Date)]
-            public DateTime DOB { get; set; }
+            [StringLength(40, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 3)]
+            [Display(Name = "Username")]
+            public string MyUserName { get; set; }
 
             [Required]
             [EmailAddress]
@@ -91,9 +86,8 @@ namespace CloudProjectCore.Areas.Identity.Pages.Account
             if (ModelState.IsValid)
             {
                 var user = new ApplicationUser {
-                    Name = Input.Name,
-                    DOB = Input.DOB,
-                    UserName = Input.Email, 
+                    MyUserName = Input.MyUserName,
+                    UserName = Input.Email,
                     Email = Input.Email 
                 };
                 var result = await _userManager.CreateAsync(user, Input.Password);
