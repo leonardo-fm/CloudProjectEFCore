@@ -350,4 +350,4 @@ MigrationBackup/
 .ionide/
 
 # MyStuff
-CloudProjectCore/appsettings.json
+appsettings.json
