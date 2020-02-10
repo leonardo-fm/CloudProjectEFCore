@@ -1,0 +1,17 @@
+﻿@model CloudProjectCore.Models.ViewModels.UploadModel
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<p>@Model.Message</p>
+<form asp-action="UploadPost" enctype="multipart/form-data" method="post">
+    <dl>
+        <dt>
+            <label asp-for="@Model.File"></label>
+        </dt>
+        <dd>
+            <input asp-for="@Model.File" type="file">
+            <span asp-validation-for="@Model.File"></span>
+        </dd>
+    </dl>
+    <input class="btn" type="submit" value="Upload" />
+</form>

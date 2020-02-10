@@ -1,7 +1,7 @@
 ﻿using System;
 using ToolManager.BlobStorage;
 
-namespace CloudProjectCore.Models
+namespace CloudProjectCore.Models.BlobStorage
 {
     public class MyBlobManager : BlobStorageManager
     {
