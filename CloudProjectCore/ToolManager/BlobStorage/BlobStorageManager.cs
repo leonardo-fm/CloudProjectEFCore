@@ -25,7 +25,7 @@ namespace ToolManager.BlobStorage
             BlocConnection();
         }
 
-        public async Task<Responses> AddDocument(Stream document, string documentName)
+        public async Task<Responses> AddDocumentAsync(Stream document, string documentName)
         {
             try
             {
@@ -38,7 +38,7 @@ namespace ToolManager.BlobStorage
                 return new Responses(false, true, false);
             }
         }
-        public async Task<Responses> RemoveDocumentByName(string userDocument)
+        public async Task<Responses> RemoveDocumentByNameAsync(string userDocument)
         {
             try
             {
@@ -70,7 +70,7 @@ namespace ToolManager.BlobStorage
 
             return sasContainerToken;
         }
-        public async Task<Responses> DeleteUserContainer()
+        public async Task<Responses> DeleteUserContainerAsync()
         {
             try
             {

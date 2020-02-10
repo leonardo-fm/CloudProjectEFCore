@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace ToolManager.ComputerVision
 {
-    class ComputerVisionManager
+    public class ComputerVisionManager
     {
         private readonly List<VisualFeatureTypes> _features;
         private readonly string _endpoint;
@@ -25,7 +25,7 @@ namespace ToolManager.ComputerVision
             _computerVisionService = SetupComputerVision();
         }
 
-        public async Task<List<string>> GetTagsFromImage(Stream photo, double computerVisionConfidence = 0.5)
+        public async Task<List<string>> GetTagsFromImageAsync(Stream photo, double computerVisionConfidence = 0.5)
         {
             if (computerVisionConfidence > 1 || computerVisionConfidence < 0)
                 computerVisionConfidence = 0.5;

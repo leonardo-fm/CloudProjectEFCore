@@ -30,6 +30,22 @@ namespace CloudProjectCore.Controllers
             return View();
         }
 
+        public IActionResult UploadPhotos()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult UploadPost()
+        {
+            if (Request.Body.Length > 0)
+            {
+                var a = Request;
+            }
+
+            return RedirectToAction("UploadPhotos");  
+        }
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
