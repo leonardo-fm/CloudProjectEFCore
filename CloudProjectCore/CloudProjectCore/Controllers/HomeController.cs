@@ -65,7 +65,6 @@ namespace CloudProjectCore.Controllers
                 { Message = $"The file is too big, max 5 MB, your file is {System.Math.Round(uploadModel.File.Length / 1000000.0, 2)} MB" }
                 );
 
-
             return RedirectToAction("UploadPhotos");
         }
 
