@@ -6,11 +6,14 @@ using Microsoft.AspNetCore.Http;
 using System.Threading.Tasks;
 using CloudProjectCore.Models.ViewModels;
 using System.Collections.Generic;
-using System.IO;
+using ToolManager.Helpers.UploadHelper;
+using CloudProjectCore.Models.Upload;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CloudProjectCore.Controllers
 {
-    //[Authorize]
+    [Authorize]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
@@ -18,6 +21,7 @@ namespace CloudProjectCore.Controllers
         {
             ".jpg", ".png", ".jpeg", ".gif", ".raw", ".bmp"
         };
+        private readonly int _fileMaxLengthLimit = 5 * 1024 * 1024;
 
         public HomeController(ILogger<HomeController> logger)
         {
@@ -46,24 +50,14 @@ namespace CloudProjectCore.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> UploadPost(UploadModel uploadModel)
         {
-            if (!_extensionsPermitted.Contains(Path.GetExtension(uploadModel.File.FileName)))
-            {
-                string extensions = "";
-                foreach (string ex in _extensionsPermitted)
-                    extensions += ex + " ";
-                return RedirectToAction("UploadPhotos", new UploadModel()
-                { Message = $"The permitted extensions are: {extensions}" }
-                );
-            }
+            if (uploadModel.File == null
+                || !UploadHelper.IsSingleContentType(uploadModel.File)
+                || !UploadHelper.HasAValidExtention(uploadModel.File, _extensionsPermitted)
+                || !UploadHelper.IsInLengthLimits(uploadModel.File, _fileMaxLengthLimit))
+                return RedirectToAction("UploadPhotos", new UploadModel { Message = "File not suported" });
 
-            if (uploadModel.File.Length == 0)
-                return RedirectToAction("UploadPhotos", new UploadModel()
-                { Message = $"The file is empty" }
-                );
-            else if (uploadModel.File.Length > 5000000)
-                return RedirectToAction("UploadPhotos", new UploadModel()
-                { Message = $"The file is too big, max 5 MB, your file is {System.Math.Round(uploadModel.File.Length / 1000000.0, 2)} MB" }
-                );
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier);
+            var response = await MyUploadManager.UploadNewPhoto(uploadModel.File, userId.Value);
 
             return RedirectToAction("UploadPhotos");
         }

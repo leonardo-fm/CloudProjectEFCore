@@ -7,8 +7,9 @@ namespace ToolManager.MongoDB
 {
     public class MongoDBManager
     {
-        private IMongoDatabase _database { get; set; }
         private MongoClient _databaseConnection { get; set; }
+        
+        public IMongoDatabase database { get; set; }
 
         public MongoDBManager(string connectionString)
         {
@@ -39,7 +40,7 @@ namespace ToolManager.MongoDB
         {
             try
             {
-                _database = _databaseConnection.GetDatabase(databaseName);
+                database = _databaseConnection.GetDatabase(databaseName);
                 return new Responses(true, false, false);
             }
             catch (Exception)

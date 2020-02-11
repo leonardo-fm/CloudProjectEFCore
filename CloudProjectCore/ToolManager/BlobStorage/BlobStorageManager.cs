@@ -15,13 +15,13 @@ namespace ToolManager.BlobStorage
         public BlobStorageManager(string connectionString, string containerName)
         {
             _connectionString = connectionString;
-            _blobUserContainer = SelectContainer(containerName);
+            SelectContainer(containerName);
             BlocConnection();
         }
         public BlobStorageManager(string defaultEndpointsProtocol, string accountName, string accountKey, string EndpointSuffix, string containerName)
         {
             _connectionString = GetConnectionString(defaultEndpointsProtocol, accountName, accountKey, EndpointSuffix);
-            _blobUserContainer = SelectContainer(containerName);
+            SelectContainer(containerName);
             BlocConnection();
         }
 
@@ -55,20 +55,24 @@ namespace ToolManager.BlobStorage
         }
         public string GetContainerSasUri(int minutesToAdd = 1)
         {
-            minutesToAdd = minutesToAdd < 0 ? 1 : minutesToAdd;
-
-            string sasContainerToken;
-            int timeDifferencesInMinutes = (DateTime.Now.Hour - DateTime.UtcNow.Hour) * 60;
-
-            SharedAccessBlobPolicy adHocPolicy = new SharedAccessBlobPolicy()
+            try
             {
-                SharedAccessExpiryTime = DateTime.UtcNow.AddMinutes(minutesToAdd + timeDifferencesInMinutes),
-                Permissions = SharedAccessBlobPermissions.Read
-            };
+                minutesToAdd = minutesToAdd < 0 ? 1 : minutesToAdd;
 
-            sasContainerToken = _blobUserContainer.GetSharedAccessSignature(adHocPolicy, null);
+                int timeDifferencesInMinutes = (DateTime.Now.Hour - DateTime.UtcNow.Hour) * 60;
 
-            return sasContainerToken;
+                SharedAccessBlobPolicy adHocPolicy = new SharedAccessBlobPolicy()
+                {
+                    SharedAccessExpiryTime = DateTime.UtcNow.AddMinutes(minutesToAdd + timeDifferencesInMinutes),
+                    Permissions = SharedAccessBlobPermissions.Read
+                };
+
+                return _blobUserContainer.GetSharedAccessSignature(adHocPolicy, null);
+            }
+            catch (Exception)
+            {
+                return null;
+            }
         }
         public async Task<Responses> DeleteUserContainerAsync()
         {
@@ -82,6 +86,17 @@ namespace ToolManager.BlobStorage
             catch (Exception)
             {
                 return new Responses(false, true, false);
+            }
+        }
+        public string GetDocumentPath(string documentName)
+        {
+            try
+            {
+                return _blobUserContainer.GetBlockBlobReference(documentName).Uri.AbsoluteUri;
+            }
+            catch (Exception)
+            {
+                return null;
             }
         }
         
@@ -101,12 +116,10 @@ namespace ToolManager.BlobStorage
                 throw new Exception("Wrong connection string");
             }
         }
-        private CloudBlobContainer SelectContainer(string userId)
+        private void SelectContainer(string userId)
         {
-            var userContainer = _blobConnection.GetContainerReference(userId);
-            userContainer.CreateIfNotExistsAsync().Wait();
-
-            return userContainer;
+            _blobUserContainer = _blobConnection.GetContainerReference(userId);
+            _blobUserContainer.CreateIfNotExistsAsync().Wait();
         }
     }
 }

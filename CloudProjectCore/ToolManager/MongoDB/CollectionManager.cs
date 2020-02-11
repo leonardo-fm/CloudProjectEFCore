@@ -11,7 +11,7 @@ namespace ToolManager.MongoDB
     {
         private IMongoCollection<T> _mongoCollection;
 
-        public CollectionManager(string collectionName, IMongoDatabase database)
+        public CollectionManager(IMongoDatabase database, string collectionName)
         {
             try
             {

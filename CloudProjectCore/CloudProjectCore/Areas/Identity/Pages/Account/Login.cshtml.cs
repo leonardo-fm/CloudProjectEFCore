@@ -84,6 +84,7 @@ namespace CloudProjectCore.Areas.Identity.Pages.Account
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User logged in.");
+                    // add session
                     return LocalRedirect(returnUrl);
                 }
                 if (result.RequiresTwoFactor)
