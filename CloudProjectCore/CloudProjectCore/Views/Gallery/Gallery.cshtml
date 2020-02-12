@@ -1,0 +1,53 @@
+﻿@using CloudProjectCore.Models.Photo
+@using CloudProjectCore.Models.ViewModels
+@model GalleryModel
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<br />
+<div class="container">
+    <div class="col-md-1">
+        <h2>Gallery</h2>
+    </div>
+    <div class="col-md-offset-8">
+        @Html.ActionLink("Multiple delete", "Gallery", "Gallery", new { multipleDeletes = true })
+    </div>
+</div>
+<br />
+<br />
+
+<div class="container">
+    <div>
+        @using (Html.BeginForm("Gallery", "Gallery", FormMethod.Get))
+        {
+            <input type="text" name="tag" /><br /><br />
+            <input type="submit" value="Search tag" />
+            <br /><br />
+        }
+    </div>
+
+    @using (Html.BeginForm("DeletePhotos", "Photo", FormMethod.Get, new { photosToDelete = Model.photos }))
+    {
+        foreach (PhotoModelForGallery photo in Model.photos)
+        {
+            <div class="col-md-3">
+                <a href="@Url.Action("SinglePhoto", "Photo", new { photoId = photo._id.ToString() })">
+                    <img src="@photo.PhotoPhatPreview">
+                </a>
+                @if (Model.multipleDeletes)
+                {
+                    <p>
+                        @Html.CheckBoxFor(x => x.photos.Where(y => y._id == photo._id).FirstOrDefault().toBeDelete)
+                    </p>
+                }
+            </div>
+        }
+
+        if (Model.multipleDeletes)
+        {
+            <input type="submit" , value="Delete" />
+        }
+    }
+</div>
+

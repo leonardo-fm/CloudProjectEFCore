@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using MongoDB.Bson;
 using MongoDB.Driver;
@@ -9,13 +7,13 @@ namespace ToolManager.MongoDB
 {
     public class CollectionManager<T> where T : IMongoDocument
     {
-        private IMongoCollection<T> _mongoCollection;
+        public IMongoCollection<T> mongoCollection;
 
         public CollectionManager(IMongoDatabase database, string collectionName)
         {
             try
             {
-                _mongoCollection = database.GetCollection<T>(collectionName);
+                mongoCollection = database.GetCollection<T>(collectionName);
             }
             catch (Exception)
             {
@@ -27,7 +25,7 @@ namespace ToolManager.MongoDB
         {
             try
             {
-                await _mongoCollection.InsertOneAsync(document);
+                await mongoCollection.InsertOneAsync(document);
                 return new Responses(true, false, false);
             }
             catch (Exception)
@@ -39,7 +37,7 @@ namespace ToolManager.MongoDB
         {
             try
             {
-                await _mongoCollection.FindOneAndDeleteAsync(x => x._id == document._id);
+                await mongoCollection.FindOneAndDeleteAsync(x => x._id == document._id);
                 return new Responses(true, false, false);
             }
             catch (Exception)
@@ -51,7 +49,7 @@ namespace ToolManager.MongoDB
         {
             try
             {
-                return await _mongoCollection.Find(x => x._id == _id).FirstOrDefaultAsync();
+                return await mongoCollection.Find(x => x._id == _id).FirstOrDefaultAsync();
             }
             catch (Exception)
             {

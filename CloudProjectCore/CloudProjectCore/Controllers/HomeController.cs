@@ -10,6 +10,7 @@ using ToolManager.Helpers.UploadHelper;
 using CloudProjectCore.Models.Upload;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
+using CloudProjectCore.Models.MongoDB;
 
 namespace CloudProjectCore.Controllers
 {
@@ -29,11 +30,6 @@ namespace CloudProjectCore.Controllers
         }
 
         public IActionResult Index()
-        {
-            return View();
-        }
-
-        public IActionResult Privacy()
         {
             return View();
         }
@@ -59,7 +55,10 @@ namespace CloudProjectCore.Controllers
             var userId = User.FindFirst(ClaimTypes.NameIdentifier);
             var response = await MyUploadManager.UploadNewPhoto(uploadModel.File, userId.Value);
 
-            return RedirectToAction("UploadPhotos");
+            if (response.IsSuccess)
+                return RedirectToAction("UploadPhotos", new UploadModel { Message = "File uploaded" });
+            else
+                return RedirectToAction("UploadPhotos", new UploadModel { Message = "Internal error :(" });
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

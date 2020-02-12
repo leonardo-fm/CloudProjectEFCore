@@ -6,13 +6,14 @@ using Microsoft.AspNetCore.Http;
 using ToolManager.BlobStorage;
 using System.Drawing.Imaging;
 using System.Threading.Tasks;
-using ToolManager.MongoDB;
 using System.Drawing;
 using System.Linq;
 using ToolManager;
 using System.Text;
 using System.IO;
 using System;
+using MongoDB.Bson;
+using ToolManager.MongoDB;
 
 namespace CloudProjectCore.Models.Upload
 {
@@ -50,7 +51,7 @@ namespace CloudProjectCore.Models.Upload
 
             PhotoModel photoModel = new PhotoModel
             {
-                _id = new MongoDB.Bson.ObjectId(),
+                _id = new ObjectId(),
                 UserId = userId,
                 ImageName = file.FileName,
                 Tags = imageTags.Result,
