@@ -8,21 +8,19 @@ namespace ToolManager.BlobStorage
 {
     public class BlobStorageManager : Responses
     {
-        private readonly string _connectionString;
         private CloudBlobClient _blobConnection;
         private CloudBlobContainer _blobUserContainer;
 
         public BlobStorageManager(string connectionString, string containerName)
         {
-            _connectionString = connectionString;
+            _blobConnection = BlocConnection(connectionString);
             SelectContainer(containerName);
-            BlocConnection();
         }
         public BlobStorageManager(string defaultEndpointsProtocol, string accountName, string accountKey, string EndpointSuffix, string containerName)
         {
-            _connectionString = GetConnectionString(defaultEndpointsProtocol, accountName, accountKey, EndpointSuffix);
+            var connectionString = GetConnectionString(defaultEndpointsProtocol, accountName, accountKey, EndpointSuffix);
+            _blobConnection = BlocConnection(connectionString);
             SelectContainer(containerName);
-            BlocConnection();
         }
 
         public async Task<Responses> AddDocumentAsync(Stream document, string documentName)
@@ -104,12 +102,12 @@ namespace ToolManager.BlobStorage
         {
             return defaultEndpointsProtocol + accountName + accountKey + EndpointSuffix;
         }
-        private void BlocConnection()
+        private CloudBlobClient BlocConnection(string connectionString)
         {
             try
             {
-                CloudStorageAccount account = CloudStorageAccount.Parse(_connectionString);
-                _blobConnection = account.CreateCloudBlobClient();
+                CloudStorageAccount account = CloudStorageAccount.Parse(connectionString);
+                return account.CreateCloudBlobClient();
             }
             catch (Exception)
             {

@@ -1,18 +1,18 @@
-﻿using Microsoft.AspNetCore.Http;
-using System.IO;
-using System.Threading.Tasks;
-using ToolManager;
-using System.Drawing;
-using System.Drawing.Imaging;
+﻿using Microsoft.Azure.CognitiveServices.Vision.ComputerVision.Models;
+using CloudProjectCore.Models.Photo;
 using ToolManager.ComputerVision;
 using System.Collections.Generic;
-using Microsoft.Azure.CognitiveServices.Vision.ComputerVision.Models;
+using Microsoft.AspNetCore.Http;
 using ToolManager.BlobStorage;
-using CloudProjectCore.Models.Photo;
-using System.Linq;
-using System;
-using System.Text;
+using System.Drawing.Imaging;
+using System.Threading.Tasks;
 using ToolManager.MongoDB;
+using System.Drawing;
+using System.Linq;
+using ToolManager;
+using System.Text;
+using System.IO;
+using System;
 
 namespace CloudProjectCore.Models.Upload
 {
@@ -20,27 +20,24 @@ namespace CloudProjectCore.Models.Upload
     {
         public static async Task<Responses> UploadNewPhoto(IFormFile file, string userId)
         {
-            Stream fileStream = new MemoryStream();
-            file.CopyTo(fileStream);
-
-            Image image = null;
-
             Stream photoForBlobStorageOriginalSize = new MemoryStream();
             Stream photoForBlobStoragePreview = new MemoryStream();
             Stream photoForComputerVision = new MemoryStream();
+            Stream photoStream = new MemoryStream();
 
-            using (Stream photo = fileStream)
+            using (Stream photo = file.OpenReadStream())
             {
                 CopyStream(photo, photoForBlobStorageOriginalSize);
                 CopyStream(photo, photoForComputerVision);
-
-                image = Image.FromStream(photo);
+                CopyStream(photo, photoStream);
             }
 
+            var image = Image.FromStream(photoStream);
             MakePreview(image, photoForBlobStoragePreview);
 
             var exifDataResponse = GetExifDataFromImage(image);
             
+
             var imageTags = GetTagsAsync(photoForComputerVision);
 
             var originalImageUploadData = UploadPhotoToBlobStorageAsync
@@ -57,7 +54,7 @@ namespace CloudProjectCore.Models.Upload
                 UserId = userId,
                 ImageName = file.FileName,
                 Tags = imageTags.Result,
-                PhotoTimeOfUpload = DateTime.UtcNow.ToString(@"YYYY:MM:dd hh:mm:ss"),
+                PhotoTimeOfUpload = DateTime.UtcNow.ToString(@"yyyy/MM/dd hh:mm:ss"),
                 PhotoPhatOriginalSize = originalImageUploadData.Result.PhotoPhat,
                 PhotoPhatPreview = previewImageUploadData.Result.PhotoPhat,
                 photoGpsLatitude = exifDataResponse.photoGpsLatitude,
@@ -189,7 +186,18 @@ namespace CloudProjectCore.Models.Upload
         }
         private static Bitmap ResizeImage(Image image)
         {
-            return new Bitmap(image, new Size(300, 169));
+            int imageHeight = (int)(300.0 / image.Width * image.Height);
+            var resizedImage = new Bitmap(image, new Size(300, imageHeight));
+
+            var imageFinal = new Bitmap(300, 169);
+            imageFinal.SetResolution(72, 72);
+
+            using (Graphics g = Graphics.FromImage(imageFinal))
+            {
+                g.DrawImage(resizedImage, new Rectangle(0, 0, 300, 169), new Rectangle(0, 0, 300, 169), GraphicsUnit.Pixel);
+            }
+
+            return imageFinal;
         }
         private static ImageCodecInfo GetEncoder(ImageFormat format)
         {
