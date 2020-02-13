@@ -9,8 +9,8 @@ namespace CloudProjectCore.Models.ViewModels
 {
     public class GalleryModel
     {
-        public List<PhotoModelForGallery> photos { get; set; }
-        public bool multipleDeletes { get; set; }
-        public string lastTag { get; set; }
+        public List<PhotoModelForGallery> Photos { get; set; }
+        public bool MultipleDeletes { get; set; }
+        public string LastTag { get; set; }
     }
 }

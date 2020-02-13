@@ -7,11 +7,11 @@ namespace CloudProjectCore.Models.Photo
 {
     public class PhotoResponseForExif
     {
-        public double? photoGpsLatitude { get; set; }
-        public double? photoGpsLongitude { get; set; }
-        public string photoTagDateTime { get; set; }
-        public string photoTagImageWidth { get; set; }
-        public string photoTagImageHeight { get; set; }
-        public string photoTagThumbnailEquipModel { get; set; }
+        public double? PhotoGpsLatitude { get; set; }
+        public double? PhotoGpsLongitude { get; set; }
+        public string PhotoTagDateTime { get; set; }
+        public string PhotoTagImageWidth { get; set; }
+        public string PhotoTagImageHeight { get; set; }
+        public string PhotoTagThumbnailEquipModel { get; set; }
     }
 }

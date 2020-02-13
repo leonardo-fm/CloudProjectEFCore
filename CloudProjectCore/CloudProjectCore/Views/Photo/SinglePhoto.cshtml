@@ -1,0 +1,161 @@
+﻿@using CloudProjectCore.Models.ViewModels
+@model PhotoModelForSinglePage
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>SinglePhoto</title>
+</head>
+<body>
+    <div>
+        <h2>Photo</h2><hr />
+
+        <div class="row">
+            <div class="col-md-4">
+                <h3>
+                    @Html.ActionLink("Back to the gallery", "Gallery", "Gallery")
+                </h3><br />
+                <h4>
+                    @using (Html.BeginForm("DeletePhotos", "Photo", FormMethod.Post))
+                    {
+                        @Html.Hidden("Photos[0]._id", Model._id );
+                        @Html.Hidden("Photos[0].ToBeDelete", true );
+                        <input type="submit" , value="Delete" />
+                    }    
+                </h4>
+            </div>
+        </div>
+
+        <hr />
+        @await Html.PartialAsync("_SharePhotoForm", new SharePhotoModel() { PhotoUri = Model.PhotoPhatOriginalSize })
+
+        <hr /><br />
+        <dl class="dl-horizontal">
+
+            @if (Model.ImageName != "")
+            {
+                <dt>
+                    Name
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.ImageName)
+                </dd>
+                <br />
+            }
+
+            @if (Model.Tags != null && Model.Tags.Count != 0)
+            {
+                <dt>
+                    Tags
+                </dt>
+
+                <dd>
+                    @foreach (string tag in Model.Tags)
+                    {
+                        <div>@tag</div>
+                    }
+                </dd>
+                <br />
+            }
+
+            @if (Model.PhotoTimeOfUpload != "")
+            {
+                <dt>
+                    Photo uploaded in date
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.PhotoTimeOfUpload)
+                </dd>
+                <br />
+            }
+
+            @if (Model.PhotoGpsLatitude != null)
+            {
+                <dt>
+                    Latitude
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.PhotoGpsLatitude)
+                </dd>
+                <br />
+            }
+
+            @if (Model.PhotoGpsLongitude != null)
+            {
+                <dt>
+                    Longitude
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.PhotoGpsLongitude)
+                </dd>
+                <br />
+            }
+
+            @if (Model.PhotoTagDateTime != "")
+            {
+                <dt>
+                    Photo taken on date
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.PhotoTagDateTime)
+                </dd>
+                <br />
+            }
+
+            @if (Model.PhotoTagImageWidth != "")
+            {
+                <dt>
+                    Width
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.PhotoTagImageWidth)
+                </dd>
+                <br />
+            }
+
+            @if (Model.PhotoTagImageHeight != "")
+            {
+                <dt>
+                    Height
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.PhotoTagImageHeight)
+                </dd>
+                <br />
+            }
+
+            @if (Model.PhotoTagThumbnailEquipModel != "")
+            {
+                <dt>
+                    Camera model
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.PhotoTagThumbnailEquipModel)
+                </dd>
+                <br />
+            }
+
+            @if (Model.PhotoPhatOriginalSize != "")
+            {
+
+                <p>
+                    <img src="@Html.DisplayFor(model => model.LPhotoPhatOriginalSizeWithSasKey)" , class="img-responsive center-block">
+                </p>
+                <br />
+            }
+        </dl>
+    </div>
+</body>
+</html>

@@ -58,12 +58,12 @@ namespace CloudProjectCore.Models.Upload
                 PhotoTimeOfUpload = DateTime.UtcNow.ToString(@"yyyy/MM/dd hh:mm:ss"),
                 PhotoPhatOriginalSize = originalImageUploadData.Result.PhotoPhat,
                 PhotoPhatPreview = previewImageUploadData.Result.PhotoPhat,
-                photoGpsLatitude = exifDataResponse.photoGpsLatitude,
-                photoGpsLongitude = exifDataResponse.photoGpsLongitude,
-                photoTagImageWidth = exifDataResponse.photoTagImageWidth,
-                photoTagImageHeight = exifDataResponse.photoTagImageHeight,
-                photoTagDateTime = exifDataResponse.photoTagDateTime,
-                photoTagThumbnailEquipModel = exifDataResponse.photoTagThumbnailEquipModel
+                PhotoGpsLatitude = exifDataResponse.PhotoGpsLatitude,
+                PhotoGpsLongitude = exifDataResponse.PhotoGpsLongitude,
+                PhotoTagImageWidth = exifDataResponse.PhotoTagImageWidth,
+                PhotoTagImageHeight = exifDataResponse.PhotoTagImageHeight,
+                PhotoTagDateTime = exifDataResponse.PhotoTagDateTime,
+                PhotoTagThumbnailEquipModel = exifDataResponse.PhotoTagThumbnailEquipModel
             };
 
             return await UploadNewPhotoOnMongoDBAsync(photoModel);
@@ -116,22 +116,22 @@ namespace CloudProjectCore.Models.Upload
             Dictionary<int, byte[]> exifDictionary = 
                 exifArray.ToDictionary(x => x.Id, x => x.Value != null ? x.Value : new byte[] { });
 
-            responseForExif.photoTagImageWidth = photo.Width.ToString();
-            responseForExif.photoTagImageHeight = photo.Height.ToString();
+            responseForExif.PhotoTagImageWidth = photo.Width.ToString();
+            responseForExif.PhotoTagImageHeight = photo.Height.ToString();
 
-            responseForExif.photoGpsLatitude = exifDictionary.ContainsKey(0x0002) 
+            responseForExif.PhotoGpsLatitude = exifDictionary.ContainsKey(0x0002) 
                 ? (double?)GetGPSValues(exifDictionary[0x0002]) 
                 : null;
 
-            responseForExif.photoGpsLongitude = exifDictionary.ContainsKey(0x0004) 
+            responseForExif.PhotoGpsLongitude = exifDictionary.ContainsKey(0x0004) 
                 ? (double?)GetGPSValues(exifDictionary[0x0004]) 
                 : null;
 
-            responseForExif.photoTagDateTime = exifDictionary.ContainsKey(0x0132) 
+            responseForExif.PhotoTagDateTime = exifDictionary.ContainsKey(0x0132) 
                 ? Encoding.UTF8.GetString(exifDictionary[0x0132]).Replace("\0", "") 
                 : "";
             
-            responseForExif.photoTagThumbnailEquipModel = 
+            responseForExif.PhotoTagThumbnailEquipModel = 
                 exifDictionary.ContainsKey(0x010F) && exifDictionary.ContainsKey(0x0110) 
                 ? Encoding.UTF8.GetString(exifDictionary[0x010F]).Replace("\0", "")
                 + "/" 

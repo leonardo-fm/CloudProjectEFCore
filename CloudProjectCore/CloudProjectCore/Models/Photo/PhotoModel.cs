@@ -14,26 +14,25 @@ namespace CloudProjectCore.Models.Photo
         public string PhotoPhatPreview { get; set; }     
         public string PhotoTimeOfUpload { get; set; }
 
-
         #region EXIF Variables
 
         // 0x0002
-        public double? photoGpsLatitude { get; set; }
+        public double? PhotoGpsLatitude { get; set; }
 
         // 0x0004
-        public double? photoGpsLongitude { get; set; }
+        public double? PhotoGpsLongitude { get; set; }
 
         // 0x0132
-        public string photoTagDateTime { get; set; }
+        public string PhotoTagDateTime { get; set; }
 
         // 0x0100
-        public string photoTagImageWidth { get; set; }
+        public string PhotoTagImageWidth { get; set; }
 
         // 0x0101
-        public string photoTagImageHeight { get; set; }
+        public string PhotoTagImageHeight { get; set; }
 
         // 0x110
-        public string photoTagThumbnailEquipModel { get; set; }
+        public string PhotoTagThumbnailEquipModel { get; set; }
 
         #endregion
     }

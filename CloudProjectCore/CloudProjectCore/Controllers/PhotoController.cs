@@ -5,6 +5,7 @@ using CloudProjectCore.Models;
 using CloudProjectCore.Models.BlobStorage;
 using CloudProjectCore.Models.MongoDB;
 using CloudProjectCore.Models.Photo;
+using CloudProjectCore.Models.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
@@ -23,7 +24,8 @@ namespace CloudProjectCore.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> DeletePhotos([Bind("_id", "toBeDelete")]List<PhotoModelForDelete> photos)
+        [AutoValidateAntiforgeryToken]
+        public async Task<IActionResult> DeletePhotos([Bind("_id", "ToBeDelete")]List<PhotoModelForDelete> photos)
         {
             MyMongoDBManager myMongoDBManager = new MyMongoDBManager(Variables.MongoDBConnectionStringRW, Variables.MongoDBDatbaseName); 
             CollectionManager<PhotoModel> collectionManager =
@@ -35,7 +37,7 @@ namespace CloudProjectCore.Controllers
             List<string> blobsReferenceName = new List<string>();
 
             foreach (var photo in photos)
-                if (photo.toBeDelete)
+                if (photo.ToBeDelete)
                 {
                     var photosName = await _myMongoDbManager.GetPhotosName(new ObjectId(photo._id));
                     blobsReferenceName.AddRange(photosName);
@@ -56,6 +58,24 @@ namespace CloudProjectCore.Controllers
             }
 
             return RedirectToAction("Gallery", "Gallery");
+        }
+
+        public async Task<IActionResult> SinglePhoto(string photoId)
+        {
+            ObjectId _id = new ObjectId(photoId);
+
+            CollectionManager<PhotoModel> collectionManager = 
+                new CollectionManager<PhotoModel>(_myMongoDbManager.database, Variables.MongoDBPhotosCollectionName);
+
+            var photoResponse = await collectionManager.GetDocumentByIdAsync(_id);
+            var photo = new PhotoModelForSinglePage(photoResponse);
+
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier);
+            MyBlobManager myBlobManager = new MyBlobManager(Variables.BlobStorageConnectionString, userId.Value);
+
+            photo.LPhotoPhatOriginalSizeWithSasKey = photo.PhotoPhatOriginalSize + myBlobManager.GetContainerSasUri();
+
+            return View(photo);
         }
     }
 }

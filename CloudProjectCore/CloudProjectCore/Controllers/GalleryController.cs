@@ -30,9 +30,9 @@ namespace CloudProjectCore.Controllers
             photos.Result.ForEach(x => x.PhotoPhatPreview += sasUri);
 
             GalleryModel galleryModel = new GalleryModel() { 
-                photos = photos.Result, 
-                lastTag = tag, 
-                multipleDeletes = multipleDeletes 
+                Photos = photos.Result, 
+                LastTag = tag, 
+                MultipleDeletes = multipleDeletes 
             };
 
             return View(galleryModel);

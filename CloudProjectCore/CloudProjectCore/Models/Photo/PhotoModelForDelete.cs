@@ -8,6 +8,6 @@ namespace CloudProjectCore.Models.Photo
     public class PhotoModelForDelete
     {
         public string _id { get; set; }
-        public bool toBeDelete { get; set; }
+        public bool ToBeDelete { get; set; }
     }
 }

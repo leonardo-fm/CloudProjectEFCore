@@ -1,5 +1,4 @@
-﻿@using CloudProjectCore.Models.Photo
-@using CloudProjectCore.Models.ViewModels
+﻿@using CloudProjectCore.Models.ViewModels
 @model GalleryModel
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -11,7 +10,10 @@
         <h2>Gallery</h2>
     </div>
     <div class="col-md-offset-8">
-        @Html.ActionLink("Multiple delete", "Gallery", "Gallery", new { multipleDeletes = true })
+        @if (Model.Photos.Count > 0)
+        {
+            @Html.ActionLink("Multiple delete", "Gallery", "Gallery", new { multipleDeletes = true })
+        }
     </div>
 </div>
 <br />
@@ -29,24 +31,24 @@
 
     @using (Html.BeginForm("DeletePhotos", "Photo", FormMethod.Post))
     {
-        @for (int i = 0; i < Model.photos.Count; i++)
+        @for (int i = 0; i < Model.Photos.Count; i++)
         {
-            @Html.HiddenFor(x => x.photos[i]._id)
-            @Html.HiddenFor(x => x.photos[i].PhotoPhatPreview)
+            @Html.HiddenFor(x => x.Photos[i]._id)
+            @Html.HiddenFor(x => x.Photos[i].PhotoPhatPreview)
             <div class="col-md-3">
-                <a href="@Url.Action("SinglePhoto", "Photo", new { photoId = Model.photos[i]._id })">
-                    <img src="@Model.photos[i].PhotoPhatPreview">
+                <a href="@Url.Action("SinglePhoto", "Photo", new { photoId = Model.Photos[i]._id })">
+                    <img src="@Model.Photos[i].PhotoPhatPreview">
                 </a>
-                @if (Model.multipleDeletes)
+                @if (Model.MultipleDeletes)
                 {
                     <p>
-                        @Html.CheckBoxFor(x => x.photos[i].toBeDelete)
+                        @Html.CheckBoxFor(x => x.Photos[i].ToBeDelete)
                     </p>
                 }
             </div>
         }
 
-        if (Model.multipleDeletes)
+        if (Model.MultipleDeletes)
         {
             <input type="submit" , value="Delete" />
         }
