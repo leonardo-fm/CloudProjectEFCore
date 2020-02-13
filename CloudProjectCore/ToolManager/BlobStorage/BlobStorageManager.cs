@@ -29,26 +29,26 @@ namespace ToolManager.BlobStorage
             {
                 CloudBlockBlob cBlob = _blobUserContainer.GetBlockBlobReference(documentName);
                 await cBlob.UploadFromStreamAsync(document);
-                return new Responses(true, false, false);
+                return new Responses(true, false);
             }
             catch (Exception)
             {
-                return new Responses(false, true, false);
+                return new Responses(false, true);
             }
         }
-        public async Task<Responses> RemoveDocumentByNameAsync(string userDocument)
+        public async Task<Responses> RemoveDocumentByNameAsync(string documentName)
         {
             try
             {
-                CloudBlockBlob cBlob = _blobUserContainer.GetBlockBlobReference(userDocument);
+                CloudBlockBlob cBlob = _blobUserContainer.GetBlockBlobReference(documentName);
                 var response = await cBlob.DeleteIfExistsAsync();
                 if(response)
-                    return new Responses(true, false, false);
-                return new Responses(false, true, false);
+                    return new Responses(true, false);
+                return new Responses(false, true);
             }
             catch (Exception)
             {
-                return new Responses(false, true, false);
+                return new Responses(false, true);
             }
         }
         public string GetContainerSasUri(int minutesToAdd = 1)
@@ -78,12 +78,12 @@ namespace ToolManager.BlobStorage
             {
                 var response = await _blobUserContainer.DeleteIfExistsAsync();
                 if (response)
-                    return new Responses(true, false, false);
-                return new Responses(false, true, false);
+                    return new Responses(true, false);
+                return new Responses(false, true);
             }
             catch (Exception)
             {
-                return new Responses(false, true, false);
+                return new Responses(false, true);
             }
         }
         public string GetDocumentPath(string documentName)

@@ -26,23 +26,35 @@ namespace ToolManager.MongoDB
             try
             {
                 await mongoCollection.InsertOneAsync(document);
-                return new Responses(true, false, false);
+                return new Responses(true, false);
             }
             catch (Exception)
             {
-                return new Responses(false, true, false);
+                return new Responses(false, true);
             }
         }
-        public async Task<Responses> RmoveDocumentAsync(T document)
+        public async Task<Responses> RemoveDocumentAsync(T document)
         {
             try
             {
                 await mongoCollection.FindOneAndDeleteAsync(x => x._id == document._id);
-                return new Responses(true, false, false);
+                return new Responses(true, false);
             }
             catch (Exception)
             {
-                return new Responses(false, true, false);
+                return new Responses(false, true);
+            }
+        }
+        public async Task<Responses> RemoveDocumentAsync(ObjectId documentId)
+        {
+            try
+            {
+                await mongoCollection.FindOneAndDeleteAsync(x => x._id == documentId);
+                return new Responses(true, false);
+            }
+            catch (Exception)
+            {
+                return new Responses(false, true);
             }
         }
         public async Task<T> GetDocumentByIdAsync(ObjectId _id)

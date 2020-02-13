@@ -1,7 +1,9 @@
 ﻿using CloudProjectCore.Models.Photo;
+using MongoDB.Bson;
 using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using ToolManager.MongoDB;
@@ -12,6 +14,17 @@ namespace CloudProjectCore.Models.MongoDB
     {
         public MyMongoDBManager(string connectionString, string databaseName) : base(connectionString, databaseName) { }
 
+        public async Task<List<string>> GetPhotosName(ObjectId _id)
+        {
+            CollectionManager<PhotoModel> collectionManager =
+                new CollectionManager<PhotoModel>(database, Variables.MongoDBPhotosCollectionName);
+
+            var photoObject = await collectionManager.mongoCollection.Find(x => x._id == _id).FirstOrDefaultAsync();
+            string nameOriginal = Path.GetFileName(photoObject.PhotoPhatOriginalSize);
+            string namePreview = Path.GetFileName(photoObject.PhotoPhatPreview);
+
+            return new List<string>() { nameOriginal, namePreview };
+        }
         public async Task<List<PhotoModelForGallery>> GetPhotoForGallery(string userId, string tag = "")
         {
             List<PhotoModelForGallery> result = new List<PhotoModelForGallery>();

@@ -41,11 +41,11 @@ namespace ToolManager.MongoDB
             try
             {
                 database = _databaseConnection.GetDatabase(databaseName);
-                return new Responses(true, false, false);
+                return new Responses(true, false);
             }
             catch (Exception)
             {
-                return new Responses(false, true, false);
+                return new Responses(false, true);
             }
         }
 
