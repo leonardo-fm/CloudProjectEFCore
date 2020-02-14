@@ -22,16 +22,28 @@
                 <h4>
                     @using (Html.BeginForm("DeletePhotos", "Photo", FormMethod.Post))
                     {
-                        @Html.Hidden("Photos[0]._id", Model._id );
-                        @Html.Hidden("Photos[0].ToBeDelete", true );
+                        @Html.Hidden("Photos[0]._id", Model._id);
+                        @Html.Hidden("Photos[0].ToBeDelete", true);
                         <input type="submit" , value="Delete" />
-                    }    
+                    }
                 </h4>
             </div>
         </div>
 
         <hr />
-        @await Html.PartialAsync("_SharePhotoForm", new SharePhotoModel() { PhotoUri = Model.PhotoPhatOriginalSize })
+        @if (Model.UriForSheredImage != "")
+        {
+            <p>@Model.UriForSheredImage</p>
+        }
+        else
+        {
+            @await Html.PartialAsync("_SharePhotoForm", new SharePhotoModel()
+           {
+               _id = Model._id.ToString(),
+               PhotoUri = Model.PhotoPhatOriginalSize,
+               DateOfExpire = DateTime.Now
+           })
+        }
 
         <hr /><br />
         <dl class="dl-horizontal">

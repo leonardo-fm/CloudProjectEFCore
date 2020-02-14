@@ -55,7 +55,7 @@ namespace CloudProjectCore.Models.Upload
                 UserId = userId,
                 ImageName = file.FileName,
                 Tags = imageTags.Result,
-                PhotoTimeOfUpload = DateTime.UtcNow.ToString(@"yyyy/MM/dd hh:mm:ss"),
+                PhotoTimeOfUpload = DateTime.UtcNow.ToString(@"yyyy/MM/dd HH:mm:ss"),
                 PhotoPhatOriginalSize = originalImageUploadData.Result.PhotoPhat,
                 PhotoPhatPreview = previewImageUploadData.Result.PhotoPhat,
                 PhotoGpsLatitude = exifDataResponse.PhotoGpsLatitude,
@@ -86,21 +86,23 @@ namespace CloudProjectCore.Models.Upload
                 VisualFeatureTypes.Tags
             };
 
-            ComputerVisionManager computerVision = 
-                new ComputerVisionManager(Variables.ComputerVisionEndpoint, Variables.ComputerVisionKey, featureList);
-
-            return await computerVision.GetTagsFromImageAsync(photoToBeElaborate);
+            using (ComputerVisionManager computerVision =
+                new ComputerVisionManager(Variables.ComputerVisionEndpoint, Variables.ComputerVisionKey, featureList))
+            {
+                return await computerVision.GetTagsFromImageAsync(photoToBeElaborate);
+            }
         }
         private static async Task<PhotoResponseForBlobStorage> UploadPhotoToBlobStorageAsync
             (Stream photo, string photoName, string userId)
         {
             PhotoResponseForBlobStorage photoResponse = new PhotoResponseForBlobStorage();
 
-            BlobStorageManager blobStorageManager = new BlobStorageManager(Variables.BlobStorageConnectionString, userId);
-            var response = await blobStorageManager.AddDocumentAsync(photo, photoName);
-
-            if (response.IsSuccess)            
-                photoResponse.PhotoPhat = blobStorageManager.GetDocumentPath(photoName);
+            using (BlobStorageManager blobStorageManager = new BlobStorageManager(Variables.BlobStorageConnectionString, userId))
+            {
+                var response = await blobStorageManager.AddDocumentAsync(photo, photoName);
+                if (response.IsSuccess)
+                    photoResponse.PhotoPhat = blobStorageManager.GetDocumentPath(photoName);
+            }
 
             return photoResponse;
         }
@@ -159,13 +161,13 @@ namespace CloudProjectCore.Models.Upload
         }
         private static async Task<Responses> UploadNewPhotoOnMongoDBAsync(PhotoModel photo)
         {
-            MongoDBManager mongoDBManager = 
-                new MongoDBManager(Variables.MongoDBConnectionStringRW, Variables.MongoDBDatbaseName);
-
-            CollectionManager<PhotoModel> collectionManager = 
-                new CollectionManager<PhotoModel>(mongoDBManager.database, Variables.MongoDBPhotosCollectionName);
-
-            return await collectionManager.AddDocumentAsync(photo);
+            using (MongoDBManager mongoDBManager =
+                new MongoDBManager(Variables.MongoDBConnectionStringRW, Variables.MongoDBDatbaseName))
+            using (CollectionManager<PhotoModel> collectionManager =
+                new CollectionManager<PhotoModel>(mongoDBManager.database, Variables.MongoDBPhotosCollectionName))
+            {
+                return await collectionManager.AddDocumentAsync(photo);
+            }
         }
         private static string GetNewNameForStorage(string fileExtention)
         {

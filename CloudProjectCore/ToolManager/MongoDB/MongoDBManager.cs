@@ -5,7 +5,7 @@ using MongoDB.Driver;
 
 namespace ToolManager.MongoDB
 {
-    public class MongoDBManager
+    public class MongoDBManager : IDisposable
     {
         private MongoClient _databaseConnection { get; set; }
         
@@ -72,6 +72,12 @@ namespace ToolManager.MongoDB
             {
                 throw;
             }
+        }
+
+        public void Dispose()
+        {
+            _databaseConnection = null;
+            database = null;
         }
     }
 }

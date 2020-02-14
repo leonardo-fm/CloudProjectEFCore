@@ -3,9 +3,9 @@ using ToolManager.BlobStorage;
 
 namespace CloudProjectCore.Models.BlobStorage
 {
-    public class MyBlobManager : BlobStorageManager
+    public class MyBlobStorageManager : BlobStorageManager
     {
-        public MyBlobManager(string connectionString, string userId) : base(connectionString, userId) { }
+        public MyBlobStorageManager(string connectionString, string userId) : base(connectionString, userId) { }
 
         public string GetLinkForSharePhoto(DateTime expireDate)
         {

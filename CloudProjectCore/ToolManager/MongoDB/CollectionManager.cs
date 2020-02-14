@@ -5,7 +5,7 @@ using MongoDB.Driver;
 
 namespace ToolManager.MongoDB
 {
-    public class CollectionManager<T> where T : IMongoDocument
+    public class CollectionManager<T> : IDisposable where T : IMongoDocument
     {
         public IMongoCollection<T> mongoCollection;
 
@@ -67,6 +67,11 @@ namespace ToolManager.MongoDB
             {
                 return default(T);
             }
+        }
+
+        public void Dispose()
+        {
+            mongoCollection = null;
         }
     }
 }

@@ -10,7 +10,6 @@ using ToolManager.Helpers.UploadHelper;
 using CloudProjectCore.Models.Upload;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
-using CloudProjectCore.Models.MongoDB;
 
 namespace CloudProjectCore.Controllers
 {
@@ -23,10 +22,12 @@ namespace CloudProjectCore.Controllers
             ".jpg", ".png", ".jpeg", ".gif", ".raw", ".bmp"
         };
         private readonly int _fileMaxLengthLimit = 5 * 1024 * 1024;
+        private readonly string _userId;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, IHttpContextAccessor contextAccessor)
         {
             _logger = logger;
+            _userId = contextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
         }
 
         public IActionResult Index()
@@ -52,8 +53,7 @@ namespace CloudProjectCore.Controllers
                 || !UploadHelper.IsInLengthLimits(uploadModel.File, _fileMaxLengthLimit))
                 return RedirectToAction("UploadPhotos", new UploadModel { Message = "File not suported" });
 
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier);
-            var response = await MyUploadManager.UploadNewPhoto(uploadModel.File, userId.Value);
+            var response = await MyUploadManager.UploadNewPhoto(uploadModel.File, _userId);
 
             if (response.IsSuccess)
                 return RedirectToAction("UploadPhotos", new UploadModel { Message = "File uploaded" });

@@ -27,5 +27,6 @@ namespace CloudProjectCore.Models.ViewModels
     }
 
         public string LPhotoPhatOriginalSizeWithSasKey { get; set; }
+        public string UriForSheredImage { get; set; }
     }
 }

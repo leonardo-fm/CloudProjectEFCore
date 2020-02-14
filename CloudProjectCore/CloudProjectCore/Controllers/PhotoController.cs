@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using CloudProjectCore.Models;
@@ -7,6 +8,7 @@ using CloudProjectCore.Models.MongoDB;
 using CloudProjectCore.Models.Photo;
 using CloudProjectCore.Models.ViewModels;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
 using ToolManager.MongoDB;
@@ -17,65 +19,74 @@ namespace CloudProjectCore.Controllers
     public class PhotoController : Controller
     {
         private readonly MyMongoDBManager _myMongoDbManager;
+        private readonly string _userId;
 
-        public PhotoController(MyMongoDBManager myMongoDBManager)
+        public PhotoController(MyMongoDBManager myMongoDBManager, IHttpContextAccessor contextAccessor)
         {
             _myMongoDbManager = myMongoDBManager;
+            _userId = contextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
         }
 
         [HttpPost]
         [AutoValidateAntiforgeryToken]
         public async Task<IActionResult> DeletePhotos([Bind("_id", "ToBeDelete")]List<PhotoModelForDelete> photos)
         {
-            MyMongoDBManager myMongoDBManager = new MyMongoDBManager(Variables.MongoDBConnectionStringRW, Variables.MongoDBDatbaseName); 
-            CollectionManager<PhotoModel> collectionManager =
-                new CollectionManager<PhotoModel>(myMongoDBManager.database, Variables.MongoDBPhotosCollectionName);
-
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier);
-            MyBlobManager myBlobManager = new MyBlobManager(Variables.BlobStorageConnectionString, userId.Value);
-
             List<string> blobsReferenceName = new List<string>();
 
-            foreach (var photo in photos)
-                if (photo.ToBeDelete)
-                {
-                    var photosName = await _myMongoDbManager.GetPhotosName(new ObjectId(photo._id));
-                    blobsReferenceName.AddRange(photosName);
-                    var response = await collectionManager.RemoveDocumentAsync(new ObjectId(photo._id));
-                    //if(response.IsSuccess)
-                    //    // log ok
-                    //else
-                    //    // log no
-                }
-
-            foreach (var name in blobsReferenceName)
+            using (
+                CollectionManager<PhotoModel> collectionManager =
+                new CollectionManager<PhotoModel>(_myMongoDbManager.database, Variables.MongoDBPhotosCollectionName))
+            using (
+                MyBlobStorageManager myBlobStorageManager = new MyBlobStorageManager(Variables.BlobStorageConnectionString, _userId))
             {
-                var response = await myBlobManager.RemoveDocumentByNameAsync(name);
-                //if(response.IsSuccess)
-                //    // log ok
-                //else
-                //    // log no
+                foreach (var photo in photos)
+                    if (photo.ToBeDelete)
+                    {
+                        var photosName = await _myMongoDbManager.GetPhotosName(new ObjectId(photo._id));
+                        blobsReferenceName.AddRange(photosName);
+                        await collectionManager.RemoveDocumentAsync(new ObjectId(photo._id));
+                    }
+
+                foreach (var name in blobsReferenceName)
+                    await myBlobStorageManager.RemoveDocumentByNameAsync(name);
             }
 
             return RedirectToAction("Gallery", "Gallery");
         }
 
-        public async Task<IActionResult> SinglePhoto(string photoId)
+        public async Task<IActionResult> SinglePhoto(string photoId, string UriForSheredImage = "")
         {
             ObjectId _id = new ObjectId(photoId);
+            PhotoModelForSinglePage photo;
 
-            CollectionManager<PhotoModel> collectionManager = 
-                new CollectionManager<PhotoModel>(_myMongoDbManager.database, Variables.MongoDBPhotosCollectionName);
+            using (CollectionManager<PhotoModel> collectionManager =
+                new CollectionManager<PhotoModel>(_myMongoDbManager.database, Variables.MongoDBPhotosCollectionName))
+            {
+                var photoResponse = await collectionManager.GetDocumentByIdAsync(_id);
+                photo = new PhotoModelForSinglePage(photoResponse);
+                photo.UriForSheredImage = UriForSheredImage;
+            }
 
-            var photoResponse = await collectionManager.GetDocumentByIdAsync(_id);
-            var photo = new PhotoModelForSinglePage(photoResponse);
-
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier);
-            MyBlobManager myBlobManager = new MyBlobManager(Variables.BlobStorageConnectionString, userId.Value);
-
-            photo.LPhotoPhatOriginalSizeWithSasKey = photo.PhotoPhatOriginalSize + myBlobManager.GetContainerSasUri();
+            using (MyBlobStorageManager myBlobStorageManager = new MyBlobStorageManager(Variables.BlobStorageConnectionString, _userId))
+            {
+                photo.LPhotoPhatOriginalSizeWithSasKey = photo.PhotoPhatOriginalSize + myBlobStorageManager.GetContainerSasUri();
+            }
 
             return View(photo);
+        }
+
+        [HttpPost]
+        [AutoValidateAntiforgeryToken]
+        public IActionResult SharePhoto(SharePhotoModel sharePhotoModel)
+        {
+            int totalMinutes = (int)sharePhotoModel.DateOfExpire.Subtract(DateTime.Now).TotalMinutes;
+
+            using (MyBlobStorageManager myBlobStorageManager = new MyBlobStorageManager(Variables.BlobStorageConnectionString, _userId))
+            {
+                sharePhotoModel.UriForSheredImage = sharePhotoModel.PhotoUri + myBlobStorageManager.GetContainerSasUri(totalMinutes);
+            }
+
+            return RedirectToAction("SinglePhoto", new { photoId = sharePhotoModel._id, sharePhotoModel.UriForSheredImage });
         }
     }
 }

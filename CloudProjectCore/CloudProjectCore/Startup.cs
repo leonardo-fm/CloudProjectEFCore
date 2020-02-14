@@ -29,7 +29,8 @@ namespace CloudProjectCore
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddSingleton<MyMongoDBManager>(new MyMongoDBManager(Variables.MongoDBConnectionStringR, Variables.MongoDBDatbaseName));
+            services.AddSingleton(new MyMongoDBManager(Variables.MongoDBConnectionStringRW, Variables.MongoDBDatbaseName));
+            services.AddHttpContextAccessor();
 
             services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<ApplicationDbContext>();

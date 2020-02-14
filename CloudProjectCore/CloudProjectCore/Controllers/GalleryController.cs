@@ -4,6 +4,7 @@ using CloudProjectCore.Models.BlobStorage;
 using CloudProjectCore.Models.MongoDB;
 using CloudProjectCore.Models.ViewModels;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CloudProjectCore.Controllers
@@ -12,28 +13,32 @@ namespace CloudProjectCore.Controllers
     public class GalleryController : Controller
     {
         private readonly MyMongoDBManager _myMongoDbManager;
+        private readonly string _userId;
 
-        public GalleryController(MyMongoDBManager myMongoDBManager)
+        public GalleryController(MyMongoDBManager myMongoDBManager, IHttpContextAccessor contextAccessor)
         {
             _myMongoDbManager = myMongoDBManager;
+            _userId = contextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
         }
 
         public IActionResult Gallery(string tag = "", bool multipleDeletes = false)
         {
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier);
+            var photos = _myMongoDbManager.GetPhotoForGallery(_userId, tag);
+            GalleryModel galleryModel = null;
 
-            var photos = _myMongoDbManager.GetPhotoForGallery(userId.Value, tag);
+            using (MyBlobStorageManager myBlobStorageManager = new MyBlobStorageManager(Variables.BlobStorageConnectionString, _userId))
+            {
+                string sasUri = myBlobStorageManager.GetContainerSasUri();
 
-            MyBlobManager blobManager = new MyBlobManager(Variables.BlobStorageConnectionString, userId.Value);
-            string sasUri = blobManager.GetContainerSasUri();
+                photos.Result.ForEach(x => x.PhotoPhatPreview += sasUri);
 
-            photos.Result.ForEach(x => x.PhotoPhatPreview += sasUri);
-
-            GalleryModel galleryModel = new GalleryModel() { 
-                Photos = photos.Result, 
-                LastTag = tag, 
-                MultipleDeletes = multipleDeletes 
-            };
+                galleryModel = new GalleryModel()
+                {
+                    Photos = photos.Result,
+                    LastTag = tag,
+                    MultipleDeletes = multipleDeletes
+                };
+            }
 
             return View(galleryModel);
         }

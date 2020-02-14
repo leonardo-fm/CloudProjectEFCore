@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ToolManager.BlobStorage
 {
-    public class BlobStorageManager : Responses
+    public class BlobStorageManager : Responses, IDisposable
     {
         private CloudBlobClient _blobConnection;
         private CloudBlobContainer _blobUserContainer;
@@ -57,11 +57,9 @@ namespace ToolManager.BlobStorage
             {
                 minutesToAdd = minutesToAdd < 0 ? 1 : minutesToAdd;
 
-                int timeDifferencesInMinutes = (DateTime.Now.Hour - DateTime.UtcNow.Hour) * 60;
-
                 SharedAccessBlobPolicy adHocPolicy = new SharedAccessBlobPolicy()
                 {
-                    SharedAccessExpiryTime = DateTime.UtcNow.AddMinutes(minutesToAdd + timeDifferencesInMinutes),
+                    SharedAccessExpiryTime = DateTime.UtcNow.AddMinutes(minutesToAdd),
                     Permissions = SharedAccessBlobPermissions.Read
                 };
 
@@ -118,6 +116,12 @@ namespace ToolManager.BlobStorage
         {
             _blobUserContainer = _blobConnection.GetContainerReference(userId);
             _blobUserContainer.CreateIfNotExistsAsync().Wait();
+        }
+
+        public void Dispose()
+        {
+            _blobConnection = null;
+            _blobUserContainer = null;
         }
     }
 }

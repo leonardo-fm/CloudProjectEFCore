@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace ToolManager.ComputerVision
 {
-    public class ComputerVisionManager
+    public class ComputerVisionManager : IDisposable
     {
         private readonly List<VisualFeatureTypes> _features;
         private readonly string _endpoint;
@@ -52,6 +52,11 @@ namespace ToolManager.ComputerVision
             computerVision.Endpoint = _endpoint;
 
             return computerVision;
+        }
+
+        public void Dispose()
+        {
+            _computerVisionService = null;
         }
     }
 }
