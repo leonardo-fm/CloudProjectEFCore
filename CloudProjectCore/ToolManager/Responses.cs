@@ -12,12 +12,14 @@ namespace ToolManager
             IsFailed = isFailed;
         }
 
-        public static Responses Success { get 
+        public static Responses Success { 
+            get 
             {
                 return new Responses(true, false);
             }
         }
-        public static Responses Failed { get
+        public static Responses Failed { 
+            get
             {
                 return new Responses(false, true);
             }

@@ -5,53 +5,101 @@
 }
 
 <br />
-<div class="container">
-    <div class="col-md-1">
+<div class="container row">
+    <div class="col-md-6">
         <h2>Gallery</h2>
     </div>
-    <div class="col-md-offset-8">
-        @if (Model.Photos.Count > 0)
+    <div class="col-md-6">
+        @if (Model.Photos.Count != 0)
         {
-            @Html.ActionLink("Multiple delete", "Gallery", "Gallery", new { multipleDeletes = true })
+            @if (!Model.MultipleDeletes)
+            {
+                @Html.ActionLink("Multiple delete", "Gallery", "Gallery", new { multipleDeletes = true, tag = Model.LastTag },
+                    htmlAttributes: new { @type = "button", @class = "btn btn-danger float-right" })
+            }
+            else
+            {
+                @Html.ActionLink("Back", "Gallery", "Gallery", null,
+                    htmlAttributes: new { @type = "button", @class = "btn btn-primary float-right" })
+            }
         }
     </div>
 </div>
 <br />
 <br />
-
-<div class="container">
-    <div>
-        @using (Html.BeginForm("Gallery", "Gallery", FormMethod.Get))
-        {
-            <input type="text" name="tag" /><br /><br />
-            <input type="submit" value="Search tag" />
-            <br /><br />
-        }
+<div>
+    <div class="container mb-5">
+        <div>
+            @using (Html.BeginForm("Gallery", "Gallery", FormMethod.Get, htmlAttributes: new { @class = "form-inline mr-auto" }))
+            {
+                <input class="form-control mr-sm-2" type="text" placeholder="Tag" aria-label="Search" name="tag">
+                @if (!Model.MultipleDeletes)
+                {
+                    <button class="btn btn-success btn-rounded" type="submit">Search</button>
+                }
+                else
+                {
+                    <button class="btn btn-secondary btn-rounded" type="button">Search</button>
+                }
+            }
+        </div>
     </div>
 
     @using (Html.BeginForm("DeletePhotos", "Photo", FormMethod.Post))
     {
-        @for (int i = 0; i < Model.Photos.Count; i++)
+        if (Model.Photos.Count == 0)
         {
-            @Html.HiddenFor(x => x.Photos[i]._id)
-            @Html.HiddenFor(x => x.Photos[i].PhotoPhatPreview)
-            <div class="col-md-3">
-                <a href="@Url.Action("SinglePhoto", "Photo", new { photoId = Model.Photos[i]._id })">
-                    <img src="@Model.Photos[i].PhotoPhatPreview">
-                </a>
-                @if (Model.MultipleDeletes)
+            <p>No photos with the tag "@Model.LastTag"</p>
+        }
+        else
+        {
+            <div class="row">
+                @for (int i = 0; i < Model.Photos.Count; i++)
                 {
-                    <p>
-                        @Html.CheckBoxFor(x => x.Photos[i].ToBeDelete)
-                    </p>
+                    @Html.HiddenFor(x => x.Photos[i]._id)
+                    @Html.HiddenFor(x => x.Photos[i].PhotoPhatPreview)
+                    <div class="col-md-4 mb-5">
+                        <a href="@Url.Action("SinglePhoto", "Photo", new { photoId = Model.Photos[i]._id })">
+                            <img src="@Model.Photos[i].PhotoPhatPreview" class="rounded">
+                        </a>
+                        @if (Model.MultipleDeletes)
+                        {
+                            <p>
+                                @Html.CheckBoxFor(x => x.Photos[i].ToBeDelete)
+                            </p>
+                        }
+                    </div>
                 }
             </div>
-        }
 
-        if (Model.MultipleDeletes)
-        {
-            <input type="submit" , value="Delete" />
+            if (Model.MultipleDeletes)
+            {
+                <!-- Button trigger modal -->
+                <button type="button" class="btn-danger btn-lg btn-block" data-toggle="modal" data-target="#exampleModal">
+                    Delete images
+                </button>
+
+                <!-- Modal -->
+                <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Delete images</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                Are you sure you want to delete those images?
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-danger">Delete</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
         }
     }
 </div>
-

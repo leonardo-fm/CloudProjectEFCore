@@ -3,7 +3,6 @@ using Microsoft.Azure.CognitiveServices.Vision.ComputerVision.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace ToolManager.ComputerVision
@@ -25,7 +24,7 @@ namespace ToolManager.ComputerVision
             _computerVisionService = SetupComputerVision();
         }
 
-        public async Task<List<string>> GetTagsFromImageAsync(Stream photo, double computerVisionConfidence = 0.5)
+        public async Task<ComputerVisionModelData> GetDataFromImageAsync(Stream photo, double computerVisionConfidence = 0.5)
         {
             if (computerVisionConfidence > 1 || computerVisionConfidence < 0)
                 computerVisionConfidence = 0.5;
@@ -34,17 +33,21 @@ namespace ToolManager.ComputerVision
             return DisplayResults(imageAnalysisAsync, computerVisionConfidence);
         }
 
-        private List<string> DisplayResults(ImageAnalysis analysis, double computerVisionConfidence)
+        private ComputerVisionModelData DisplayResults(ImageAnalysis analysis, double computerVisionConfidence)
         {
-            List<string> resoult = new List<string>();
+            List<string> tags = new List<string>();
 
             int numberOfTags = analysis.Tags.Count;
 
+            string imageDescription = "";
+            if (analysis.Description.Captions.Count != 0)
+                imageDescription = analysis.Description.Captions[0].Text;
+
             for (int i = 0; i < numberOfTags; i++)
                 if (analysis.Tags[i].Confidence > computerVisionConfidence)
-                    resoult.Add(analysis.Tags[i].Name.ToLower());
+                    tags.Add(analysis.Tags[i].Name.ToLower());
 
-            return resoult;
+            return new ComputerVisionModelData() { Description = imageDescription, Tags = tags };
         }
         private ComputerVisionClient SetupComputerVision()
         {

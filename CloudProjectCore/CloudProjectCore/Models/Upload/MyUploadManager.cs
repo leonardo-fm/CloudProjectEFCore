@@ -13,7 +13,6 @@ using System.Text;
 using System.IO;
 using System;
 using MongoDB.Bson;
-using ToolManager.MongoDB;
 using CloudProjectCore.Models.MongoDB;
 
 namespace CloudProjectCore.Models.Upload
@@ -40,7 +39,7 @@ namespace CloudProjectCore.Models.Upload
             var exifDataResponse = GetExifDataFromImage(image);
             
 
-            var imageTags = GetTagsAsync(photoForComputerVision);
+            var computerVisionresoult = GetTagsAsync(photoForComputerVision);
 
             var originalImageUploadData = UploadPhotoToBlobStorageAsync
                 (photoForBlobStorageOriginalSize, GetNewNameForStorage(Path.GetExtension(file.FileName)), userId);
@@ -48,14 +47,15 @@ namespace CloudProjectCore.Models.Upload
             var previewImageUploadData = UploadPhotoToBlobStorageAsync
                 (photoForBlobStoragePreview, GetNewNameForStorage(".png"), userId);
 
-            await Task.WhenAll(imageTags, originalImageUploadData, previewImageUploadData);
+            await Task.WhenAll(computerVisionresoult, originalImageUploadData, previewImageUploadData);
 
             PhotoModel photoModel = new PhotoModel
             {
                 _id = new ObjectId(),
                 UserId = userId,
                 ImageName = file.FileName,
-                Tags = imageTags.Result,
+                Tags = computerVisionresoult.Result.Tags,
+                Description = computerVisionresoult.Result.Description,
                 PhotoTimeOfUpload = DateTime.UtcNow.ToString(@"yyyy/MM/dd HH:mm:ss"),
                 PhotoPhatOriginalSize = originalImageUploadData.Result.PhotoPhat,
                 PhotoPhatPreview = previewImageUploadData.Result.PhotoPhat,
@@ -79,7 +79,7 @@ namespace CloudProjectCore.Models.Upload
             streamDestination.Seek(0, SeekOrigin.Begin);
             stream.Seek(0, SeekOrigin.Begin);
         }
-        private static async Task<List<string>> GetTagsAsync(Stream photoToBeElaborate)
+        private static async Task<ComputerVisionModelData> GetTagsAsync(Stream photoToBeElaborate)
         {
             var featureList = new List<VisualFeatureTypes>()
             {
@@ -90,7 +90,7 @@ namespace CloudProjectCore.Models.Upload
             using (ComputerVisionManager computerVision =
                 new ComputerVisionManager(Variables.ComputerVisionEndpoint, Variables.ComputerVisionKey, featureList))
             {
-                return await computerVision.GetTagsFromImageAsync(photoToBeElaborate);
+                return await computerVision.GetDataFromImageAsync(photoToBeElaborate);
             }
         }
         private static async Task<PhotoResponseForBlobStorage> UploadPhotoToBlobStorageAsync

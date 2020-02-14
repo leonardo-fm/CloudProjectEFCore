@@ -14,6 +14,7 @@ namespace CloudProjectCore.Models.ViewModels
             _id = p._id;
             ImageName = p.ImageName;
             UserId = p.UserId;
+            Description = p.Description;
             Tags = p.Tags;
             PhotoPhatOriginalSize = p.PhotoPhatOriginalSize;
             PhotoPhatPreview = p.PhotoPhatPreview;

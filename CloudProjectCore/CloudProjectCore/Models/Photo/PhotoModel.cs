@@ -9,6 +9,7 @@ namespace CloudProjectCore.Models.Photo
         public ObjectId _id { get; set; }
         public string ImageName { get; set; }
         public string UserId { get; set; }
+        public string Description { get; set; }
         public List<string> Tags { get; set; }
         public string PhotoPhatOriginalSize { get; set; }
         public string PhotoPhatPreview { get; set; }     
