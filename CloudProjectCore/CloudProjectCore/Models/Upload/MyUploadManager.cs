@@ -14,6 +14,7 @@ using System.IO;
 using System;
 using MongoDB.Bson;
 using ToolManager.MongoDB;
+using CloudProjectCore.Models.MongoDB;
 
 namespace CloudProjectCore.Models.Upload
 {
@@ -161,12 +162,10 @@ namespace CloudProjectCore.Models.Upload
         }
         private static async Task<Responses> UploadNewPhotoOnMongoDBAsync(PhotoModel photo)
         {
-            using (MongoDBManager mongoDBManager =
-                new MongoDBManager(Variables.MongoDBConnectionStringRW, Variables.MongoDBDatbaseName))
-            using (CollectionManager<PhotoModel> collectionManager =
-                new CollectionManager<PhotoModel>(mongoDBManager.database, Variables.MongoDBPhotosCollectionName))
+            using (MyMongoDBManager myMongoDBManager =
+                new MyMongoDBManager(Variables.MongoDBConnectionStringRW, Variables.MongoDBDatbaseName))
             {
-                return await collectionManager.AddDocumentAsync(photo);
+                return await myMongoDBManager.AddPhotoAsync(photo);
             }
         }
         private static string GetNewNameForStorage(string fileExtention)

@@ -23,7 +23,7 @@ namespace CloudProjectCore.Controllers
 
         public IActionResult Gallery(string tag = "", bool multipleDeletes = false)
         {
-            var photos = _myMongoDbManager.GetPhotoForGallery(_userId, tag);
+            var photos = _myMongoDbManager.GetPhotoForGalleryAsync(_userId, tag);
             GalleryModel galleryModel = null;
 
             using (MyBlobStorageManager myBlobStorageManager = new MyBlobStorageManager(Variables.BlobStorageConnectionString, _userId))

@@ -34,17 +34,14 @@ namespace CloudProjectCore.Controllers
             List<string> blobsReferenceName = new List<string>();
 
             using (
-                CollectionManager<PhotoModel> collectionManager =
-                new CollectionManager<PhotoModel>(_myMongoDbManager.database, Variables.MongoDBPhotosCollectionName))
-            using (
                 MyBlobStorageManager myBlobStorageManager = new MyBlobStorageManager(Variables.BlobStorageConnectionString, _userId))
             {
                 foreach (var photo in photos)
                     if (photo.ToBeDelete)
                     {
-                        var photosName = await _myMongoDbManager.GetPhotosName(new ObjectId(photo._id));
+                        var photosName = await _myMongoDbManager.GetPhotosNameAsync(new ObjectId(photo._id));
                         blobsReferenceName.AddRange(photosName);
-                        await collectionManager.RemoveDocumentAsync(new ObjectId(photo._id));
+                        _myMongoDbManager.RemovePhotoAsync(new ObjectId(photo._id));
                     }
 
                 foreach (var name in blobsReferenceName)
@@ -59,13 +56,9 @@ namespace CloudProjectCore.Controllers
             ObjectId _id = new ObjectId(photoId);
             PhotoModelForSinglePage photo;
 
-            using (CollectionManager<PhotoModel> collectionManager =
-                new CollectionManager<PhotoModel>(_myMongoDbManager.database, Variables.MongoDBPhotosCollectionName))
-            {
-                var photoResponse = await collectionManager.GetDocumentByIdAsync(_id);
-                photo = new PhotoModelForSinglePage(photoResponse);
-                photo.UriForSheredImage = UriForSheredImage;
-            }
+            var photoResponse = await _myMongoDbManager.GetPhotoAsync(_id);
+            photo = new PhotoModelForSinglePage(photoResponse);
+            photo.UriForSheredImage = UriForSheredImage;
 
             using (MyBlobStorageManager myBlobStorageManager = new MyBlobStorageManager(Variables.BlobStorageConnectionString, _userId))
             {
