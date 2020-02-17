@@ -57,6 +57,10 @@ namespace CloudProjectCore.Controllers
             PhotoModelForSinglePage photo;
 
             var photoResponse = await _myMongoDbManager.GetPhotoAsync(_id);
+
+            if (photoResponse == null)
+                return Content("Wrong parameter");
+
             photo = new PhotoModelForSinglePage(photoResponse);
             photo.UriForSheredImage = UriForSheredImage;
 

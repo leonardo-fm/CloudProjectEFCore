@@ -52,7 +52,7 @@ function addMarkecr(photo) {
     marker.setMap(map);
 
     google.maps.event.addListener(marker, 'click', function () {
-        window.open(marker.url);
+        window.location = marker.url;
     });
 }
 

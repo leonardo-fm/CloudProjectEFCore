@@ -13,6 +13,7 @@ namespace CloudProjectCore.API
     [Authorize]
     public class MapController : ControllerBase
     {
+        [AutoValidateAntiforgeryToken]
         [Route("GetPhotos")]
         public string GetPhotosForTheMap()
         {
