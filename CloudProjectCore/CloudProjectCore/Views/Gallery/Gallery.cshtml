@@ -1,11 +1,11 @@
 ﻿@using CloudProjectCore.Models.ViewModels
 @model GalleryModel
+
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<br />
-<div class="container row">
+<div class="row">
     <div class="col-md-6">
         <h2>Gallery</h2>
     </div>
@@ -28,7 +28,7 @@
 <br />
 <br />
 <div>
-    <div class="container mb-5">
+    <div class="col-md-6">
         <div>
             @using (Html.BeginForm("Gallery", "Gallery", FormMethod.Get, htmlAttributes: new { @class = "form-inline mr-auto" }))
             {
@@ -45,61 +45,63 @@
         </div>
     </div>
 
-    @using (Html.BeginForm("DeletePhotos", "Photo", FormMethod.Post))
-    {
-        if (Model.Photos.Count == 0)
+    <div class="col-md-12 mt-5">
+        @using (Html.BeginForm("DeletePhotos", "Photo", FormMethod.Post))
         {
-            <p>No photos with the tag "@Model.LastTag"</p>
-        }
-        else
-        {
-            <div class="row">
-                @for (int i = 0; i < Model.Photos.Count; i++)
-                {
-                    @Html.HiddenFor(x => x.Photos[i]._id)
-                    @Html.HiddenFor(x => x.Photos[i].PhotoPhatPreview)
-                    <div class="col-md-4 mb-5">
-                        <a href="@Url.Action("SinglePhoto", "Photo", new { photoId = Model.Photos[i]._id })">
-                            <img src="@Model.Photos[i].PhotoPhatPreview" class="rounded">
-                        </a>
-                        @if (Model.MultipleDeletes)
-                        {
-                            <p>
-                                @Html.CheckBoxFor(x => x.Photos[i].ToBeDelete)
-                            </p>
-                        }
-                    </div>
-                }
-            </div>
-
-            if (Model.MultipleDeletes)
+            if (Model.Photos.Count == 0)
             {
-                <!-- Button trigger modal -->
-                <button type="button" class="btn-danger btn-lg btn-block" data-toggle="modal" data-target="#exampleModal">
-                    Delete images
-                </button>
+                <p>No photos with the tag "@Model.LastTag"</p>
+            }
+            else
+            {
+                <div class="row">
+                    @for (int i = 0; i < Model.Photos.Count; i++)
+                    {
+                        @Html.HiddenFor(x => x.Photos[i]._id)
+                        @Html.HiddenFor(x => x.Photos[i].PhotoPhatPreview)
+                        <div class="col-md-4 mb-5">
+                            <a href="@Url.Action("SinglePhoto", "Photo", new { photoId = Model.Photos[i]._id })">
+                                <img src="@Model.Photos[i].PhotoPhatPreview" class="rounded">
+                            </a>
+                            @if (Model.MultipleDeletes)
+                            {
+                                <p>
+                                    @Html.CheckBoxFor(x => x.Photos[i].ToBeDelete)
+                                </p>
+                            }
+                        </div>
+                    }
+                </div>
 
-                <!-- Modal -->
-                <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalLabel">Delete images</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                            <div class="modal-body">
-                                Are you sure you want to delete those images?
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                <button type="submit" class="btn btn-danger">Delete</button>
+                if (Model.MultipleDeletes)
+                {
+                    <!-- Button trigger modal -->
+                    <button type="button" class="btn-danger btn-lg btn-block" data-toggle="modal" data-target="#exampleModal">
+                        Delete images
+                    </button>
+
+                    <!-- Modal -->
+                    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Delete images</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    Are you sure you want to delete those images?
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    <button type="submit" class="btn btn-danger">Delete</button>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                }
             }
         }
-    }
+    </div>
 </div>
