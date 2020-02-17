@@ -14,6 +14,7 @@ using System.IO;
 using System;
 using MongoDB.Bson;
 using CloudProjectCore.Models.MongoDB;
+using System.Drawing.Drawing2D;
 
 namespace CloudProjectCore.Models.Upload
 {
@@ -23,6 +24,7 @@ namespace CloudProjectCore.Models.Upload
         {
             Stream photoForBlobStorageOriginalSize = new MemoryStream();
             Stream photoForBlobStoragePreview = new MemoryStream();
+            Stream photoForBlobStorageIcon = new MemoryStream();
             Stream photoForComputerVision = new MemoryStream();
             Stream photoStream = new MemoryStream();
 
@@ -34,10 +36,25 @@ namespace CloudProjectCore.Models.Upload
             }
 
             var image = Image.FromStream(photoStream);
-            MakePreview(image, photoForBlobStoragePreview);
+            MakePreview(image, photoForBlobStoragePreview, new Size(300, 169), new Size(300, 169));
 
             var exifDataResponse = GetExifDataFromImage(image);
-            
+
+            Task<PhotoResponseForBlobStorage> iconImageUploadData = null;
+            if (exifDataResponse.PhotoGpsLatitude != null && exifDataResponse.PhotoGpsLongitude != null)
+            {
+                MakePreview(image, photoForBlobStorageIcon, new Size(90, 77), new Size(100, 100));
+
+                var imageIcon = (Bitmap)Image.FromStream(photoForBlobStorageIcon);
+                var windowIcon = (Bitmap)Image.FromFile("Data/Icons/IconWindow.png");
+
+                photoForBlobStorageIcon.Seek(0, SeekOrigin.Begin);
+                GetTheImageIconForMaps(windowIcon, imageIcon).Save(photoForBlobStorageIcon, ImageFormat.Png);
+                photoForBlobStorageIcon.Seek(0, SeekOrigin.Begin);
+
+                iconImageUploadData = UploadPhotoToBlobStorageAsync
+                (photoForBlobStorageIcon, GetNewNameForStorage(".png"), userId);
+            }
 
             var computerVisionresoult = GetTagsAsync(photoForComputerVision);
 
@@ -47,7 +64,11 @@ namespace CloudProjectCore.Models.Upload
             var previewImageUploadData = UploadPhotoToBlobStorageAsync
                 (photoForBlobStoragePreview, GetNewNameForStorage(".png"), userId);
 
-            await Task.WhenAll(computerVisionresoult, originalImageUploadData, previewImageUploadData);
+            if (iconImageUploadData != null)
+                await Task.WhenAll(computerVisionresoult, originalImageUploadData, previewImageUploadData, iconImageUploadData);
+            else
+                await Task.WhenAll(computerVisionresoult, originalImageUploadData, previewImageUploadData);
+
 
             PhotoModel photoModel = new PhotoModel
             {
@@ -59,6 +80,7 @@ namespace CloudProjectCore.Models.Upload
                 PhotoTimeOfUpload = DateTime.UtcNow.ToString(@"yyyy/MM/dd HH:mm:ss"),
                 PhotoPhatOriginalSize = originalImageUploadData.Result.PhotoPhat,
                 PhotoPhatPreview = previewImageUploadData.Result.PhotoPhat,
+                PhotoPhatIcon = iconImageUploadData != null ? iconImageUploadData.Result.PhotoPhat : "",
                 PhotoGpsLatitude = exifDataResponse.PhotoGpsLatitude,
                 PhotoGpsLongitude = exifDataResponse.PhotoGpsLongitude,
                 PhotoTagImageWidth = exifDataResponse.PhotoTagImageWidth,
@@ -174,29 +196,37 @@ namespace CloudProjectCore.Models.Upload
         }
 
         #region Image modifier
-        private static void MakePreview(Image image, Stream streamDestination)
+        private static Bitmap GetTheImageIconForMaps(Bitmap window, Bitmap image)
+        {
+            Graphics g = Graphics.FromImage(window);
+            g.CompositingMode = CompositingMode.SourceCopy;
+            image.MakeTransparent();
+            g.DrawImage(image, new Point(5, 5));
+            return window;
+        }
+        private static void MakePreview(Image image, Stream streamDestination, Size finalSizeOfImageToCut, Size finalSizeOfImage)
         {
             EncoderParameters ep = new EncoderParameters();
             ep.Param[0] = new EncoderParameter(System.Drawing.Imaging.Encoder.Quality, 0L);
 
             ImageCodecInfo imageEncoder = GetEncoder(ImageFormat.Png);
 
-            var photoPreview = ResizeImage(image);
+            var photoPreview = ResizeImage(image, finalSizeOfImageToCut, finalSizeOfImage);
 
             photoPreview.Save(streamDestination, imageEncoder, ep);
             streamDestination.Seek(0, SeekOrigin.Begin);
         }
-        private static Bitmap ResizeImage(Image image)
+        private static Bitmap ResizeImage(Image image, Size finalSizeOfImageToCut, Size finalSizeOfImage)
         {
-            int imageHeight = (int)(300.0 / image.Width * image.Height);
-            var resizedImage = new Bitmap(image, new Size(300, imageHeight));
+            int imageHeight = (int)((double)finalSizeOfImageToCut.Width / image.Width * image.Height);
+            var resizedImage = new Bitmap(image, new Size(finalSizeOfImageToCut.Width, imageHeight));
 
-            var imageFinal = new Bitmap(300, 169);
-            imageFinal.SetResolution(72, 72);
+            var imageFinal = new Bitmap(finalSizeOfImageToCut.Width, finalSizeOfImageToCut.Height);
+            imageFinal.SetResolution(36, 36);
 
             using (Graphics g = Graphics.FromImage(imageFinal))
             {
-                g.DrawImage(resizedImage, new Rectangle(0, 0, 300, 169), new Rectangle(0, 0, 300, 169), GraphicsUnit.Pixel);
+                g.DrawImage(resizedImage, new Rectangle(0, 0, finalSizeOfImage.Width, finalSizeOfImage.Height), new Rectangle(0, 0, finalSizeOfImageToCut.Width, finalSizeOfImageToCut.Height), GraphicsUnit.Pixel);
             }
 
             return imageFinal;
@@ -204,10 +234,10 @@ namespace CloudProjectCore.Models.Upload
         private static ImageCodecInfo GetEncoder(ImageFormat format)
         {
             ImageCodecInfo[] codecs = ImageCodecInfo.GetImageDecoders();
-            foreach (ImageCodecInfo codec in codecs)            
-                if (codec.FormatID == format.Guid)                
-                    return codec;               
-            
+            foreach (ImageCodecInfo codec in codecs)
+                if (codec.FormatID == format.Guid)
+                    return codec;
+
             return null;
         }
         #endregion

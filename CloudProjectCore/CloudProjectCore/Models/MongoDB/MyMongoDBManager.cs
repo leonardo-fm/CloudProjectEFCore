@@ -1,4 +1,5 @@
-﻿using CloudProjectCore.Models.Photo;
+﻿using CloudProjectCore.Models.BlobStorage;
+using CloudProjectCore.Models.Photo;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using System;
@@ -68,6 +69,36 @@ namespace CloudProjectCore.Models.MongoDB
                 new CollectionManager<PhotoModel>(database, Variables.MongoDBPhotosCollectionName))
             {
                 return await collectionManager.GetDocumentByIdAsync(_id);
+            }
+        }
+        public async Task<List<PhotoModelForMap>> GetPhotosForMapAsync(string id)
+        {
+            using (CollectionManager<PhotoModel> collectionManager =
+                new CollectionManager<PhotoModel>(database, Variables.MongoDBPhotosCollectionName))
+            using (MyBlobStorageManager myBlobStorageManager =
+                new MyBlobStorageManager(Variables.BlobStorageConnectionString, id))
+            {
+                var photosForMap = new List<PhotoModelForMap>();
+
+                var res = await collectionManager.mongoCollection.Find(
+                    x => x.PhotoGpsLatitude != null 
+                    && x.PhotoGpsLongitude != null).ToListAsync();
+
+                var sasKey = myBlobStorageManager.GetContainerSasUri(10);
+
+                foreach(var photo in res)
+                {
+                    photosForMap.Add(new PhotoModelForMap
+                    {
+                        _id = photo._id.ToString(),
+                        IconPath = photo.PhotoPhatIcon + sasKey,
+                        PhotoName = photo.ImageName,
+                        PhotoLatitude = photo.PhotoGpsLatitude ?? 0,
+                        PhotoLongitude = photo.PhotoGpsLongitude ?? 0
+                    });
+                }
+
+                return photosForMap;
             }
         }
     }

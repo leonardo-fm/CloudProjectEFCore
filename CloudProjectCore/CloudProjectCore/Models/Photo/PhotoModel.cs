@@ -13,6 +13,7 @@ namespace CloudProjectCore.Models.Photo
         public List<string> Tags { get; set; }
         public string PhotoPhatOriginalSize { get; set; }
         public string PhotoPhatPreview { get; set; }     
+        public string PhotoPhatIcon { get; set; }     
         public string PhotoTimeOfUpload { get; set; }
 
         #region EXIF Variables
