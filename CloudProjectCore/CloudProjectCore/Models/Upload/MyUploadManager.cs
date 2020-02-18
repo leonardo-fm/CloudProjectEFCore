@@ -220,6 +220,11 @@ namespace CloudProjectCore.Models.Upload
         {
             int imageHeight = (int)((double)finalSizeOfImageToCut.Width / image.Width * image.Height);
             var resizedImage = new Bitmap(image, new Size(finalSizeOfImageToCut.Width, imageHeight));
+            if(imageHeight < finalSizeOfImage.Height)
+            {
+                int imageWidth = (int)((double)finalSizeOfImageToCut.Height / image.Height * image.Width);
+                resizedImage = new Bitmap(image, new Size(imageWidth, finalSizeOfImageToCut.Height));
+            }
 
             var imageFinal = new Bitmap(finalSizeOfImageToCut.Width, finalSizeOfImageToCut.Height);
             imageFinal.SetResolution(36, 36);

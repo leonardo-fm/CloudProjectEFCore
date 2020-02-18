@@ -26,7 +26,8 @@ namespace CloudProjectCore.Controllers
             var photos = _myMongoDbManager.GetPhotoForGalleryAsync(_userId, tag);
             GalleryModel galleryModel = null;
 
-            using (MyBlobStorageManager myBlobStorageManager = new MyBlobStorageManager(Variables.BlobStorageConnectionString, _userId))
+            using (MyBlobStorageManager myBlobStorageManager = 
+                new MyBlobStorageManager(Variables.BlobStorageConnectionString, _userId))
             {
                 string sasUri = myBlobStorageManager.GetContainerSasUri();
 
