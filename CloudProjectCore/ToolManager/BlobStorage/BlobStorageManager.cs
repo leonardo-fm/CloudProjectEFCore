@@ -95,7 +95,6 @@ namespace ToolManager.BlobStorage
                 return null;
             }
         }
-        
         private string GetConnectionString(string defaultEndpointsProtocol, string accountName, string accountKey, string EndpointSuffix)
         {
             return defaultEndpointsProtocol + accountName + accountKey + EndpointSuffix;

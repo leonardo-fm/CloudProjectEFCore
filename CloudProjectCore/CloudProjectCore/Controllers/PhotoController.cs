@@ -85,5 +85,20 @@ namespace CloudProjectCore.Controllers
 
             return RedirectToAction("SinglePhoto", new { photoId = sharePhotoModel._id, sharePhotoModel.UriForSheredImage });
         }
+
+        public IActionResult GetBlobDownload(PhotoModelForDownload photo)
+        {
+            using (MyBlobStorageManager myBlobStorageManager = new MyBlobStorageManager(Variables.BlobStorageConnectionString, _userId))
+            {
+                photo.Link += myBlobStorageManager.GetContainerSasUri();
+
+                var net = new System.Net.WebClient();
+                var data = net.DownloadData(photo.Link);
+                var content = new System.IO.MemoryStream(data);
+                var contentType = "APPLICATION/octet-stream";
+                var fileName = photo.OriginalName;
+                return File(content, contentType, fileName);
+            }
+        }
     }
 }

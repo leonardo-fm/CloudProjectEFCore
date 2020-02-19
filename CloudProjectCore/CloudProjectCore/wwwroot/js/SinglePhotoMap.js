@@ -2,7 +2,7 @@
 var hostAndPort;
 
 function initMap() {
-    var photoId = $('#photoId').val();
+    var photoId = document.getElementById('photoId').value;
     GetPhotoList(photoId);
 }
 
