@@ -40,7 +40,7 @@ namespace CloudProjectCore.Models.MongoDB
                 if (string.IsNullOrEmpty(tag) || string.IsNullOrWhiteSpace(tag))
                     response = await collectionManager.mongoCollection.FindAsync(x => x.UserId == userId);
                 else
-                    response = await collectionManager.mongoCollection.FindAsync(x => x.Tags.Any(y => y.Equals(tag)) 
+                    response = await collectionManager.mongoCollection.FindAsync(x => x.Tags.Any(y => y.Equals(tag))
                     && x.UserId == userId);
 
                 response.ToList().ForEach(x => result.Add(new PhotoModelForGallery() { _id = x._id, PhotoPhatPreview = x.PhotoPhatPreview }));
@@ -83,12 +83,12 @@ namespace CloudProjectCore.Models.MongoDB
                 var photosForMap = new List<PhotoModelForMap>();
 
                 var res = await collectionManager.mongoCollection.Find(
-                    x => x.PhotoGpsLatitude != null 
+                    x => x.PhotoGpsLatitude != null
                     && x.PhotoGpsLongitude != null).ToListAsync();
 
                 var sasKey = myBlobStorageManager.GetContainerSasUri(10);
 
-                foreach(var photo in res)
+                foreach (var photo in res)
                 {
                     photosForMap.Add(new PhotoModelForMap
                     {
@@ -101,6 +101,30 @@ namespace CloudProjectCore.Models.MongoDB
                 }
 
                 return photosForMap;
+            }
+        }
+        public async Task<PhotoModelForMap> GetPhotoForMapAsync(string id, ObjectId _id)
+        {
+            using (CollectionManager<PhotoModel> collectionManager =
+                new CollectionManager<PhotoModel>(database, Variables.MongoDBPhotosCollectionName))
+            using (MyBlobStorageManager myBlobStorageManager =
+                new MyBlobStorageManager(Variables.BlobStorageConnectionString, id))
+            {
+                var res = await collectionManager.mongoCollection.Find(
+                    x => x._id == _id).FirstOrDefaultAsync();
+
+                var sasKey = myBlobStorageManager.GetContainerSasUri(10);
+
+                var photoForMap = new PhotoModelForMap()
+                {
+                    _id = res._id.ToString(),
+                    IconPath = res.PhotoPhatIcon + sasKey,
+                    PhotoName = res.ImageName,
+                    PhotoLatitude = res.PhotoGpsLatitude ?? 0,
+                    PhotoLongitude = res.PhotoGpsLongitude ?? 0
+                };
+
+                return photoForMap;
             }
         }
     }

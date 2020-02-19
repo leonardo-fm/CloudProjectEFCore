@@ -70,11 +70,11 @@ namespace CloudProjectCore
             });
 
             services.AddAuthentication()
-            //.AddMicrosoftAccount(microsoftOptions =>
-            //{
-            //    microsoftOptions.ClientId = Configuration["Authentication:Microsoft:ClientId"];
-            //    microsoftOptions.ClientSecret = Configuration["Authentication:Microsoft:ClientSecret"];
-            //});
+            .AddMicrosoftAccount(microsoftOptions =>
+            {
+                microsoftOptions.ClientId = Configuration["Authentication:Microsoft:ClientId"];
+                microsoftOptions.ClientSecret = Configuration["Authentication:Microsoft:ClientSecret"];
+            })
             .AddGoogle(options =>
             {
                 IConfigurationSection googleAuthNSection =

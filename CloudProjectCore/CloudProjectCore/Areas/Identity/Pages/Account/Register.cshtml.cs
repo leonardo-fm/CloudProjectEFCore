@@ -36,8 +36,8 @@ namespace CloudProjectCore.Areas.Identity.Pages.Account
                 "smtp.gmail.com",
                 587,
                 true,
-                "progettocloud2019its@gmail.com",
-                "Progetto2019!"
+                Variables.EmailForSendingEmails,
+                Variables.PasswordForEmails
             );
         }
 

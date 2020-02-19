@@ -26,7 +26,7 @@
             }
             else
             {
-                @await Html.PartialAsync("_SharePhotoForm", new SharePhotoModel()
+                @await Html.PartialAsync("_PhotoForm", new SharePhotoModel()
                {
                    _id = Model._id.ToString(),
                    PhotoUri = Model.PhotoPhatOriginalSize,
@@ -88,24 +88,64 @@
                 </dd>
             }
 
-            @if (Model.PhotoGpsLatitude != null)
+            @if (Model.PhotoGpsLatitude != null && Model.PhotoGpsLongitude != null)
             {
-                <dt>
-                    Latitude
-                </dt>
-                <dd>
-                    @Html.DisplayFor(model => model.PhotoGpsLatitude)
-                </dd>
-            }
+                <hr />
+                <div class="row">
+                    <div class="col-md-1">
+                        <dt>
+                            Latitude
+                        </dt>
+                        <dd>
+                            @Html.DisplayFor(model => model.PhotoGpsLatitude)
+                        </dd>
+                    </div>
+                    <div class="col-md-1">
+                        <dt>
+                            Longitude
+                        </dt>
+                        <dd>
+                            @Html.DisplayFor(model => model.PhotoGpsLongitude)
+                        </dd>
+                    </div>
+                </div>
+                <div id="accordion">
+                    <div class="card">
+                        <div id="headingOne">
+                            <button class="btn col-12" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                Show on map
+                            </button>
+                        </div>
 
-            @if (Model.PhotoGpsLongitude != null)
+                        <div id="collapseOne" class="collapse hide" aria-labelledby="headingOne" data-parent="#accordion">
+                            @Html.HiddenFor(x => x._id, htmlAttributes: new { @id = "photoId" })
+                            @await Html.PartialAsync("~/Views/Map/_Map.cshtml", new MapModel { SinglePhoto = true })
+                        </div>
+                    </div>
+                </div>
+                <hr />
+            }
+            else
             {
-                <dt>
-                    Longitude
-                </dt>
-                <dd>
-                    @Html.DisplayFor(model => model.PhotoGpsLongitude)
-                </dd>
+                @if (Model.PhotoGpsLatitude != null)
+                {
+                    <dt>
+                        Latitude
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.PhotoGpsLatitude)
+                    </dd>
+                }
+
+                @if (Model.PhotoGpsLongitude != null)
+                {
+                    <dt>
+                        Longitude
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.PhotoGpsLongitude)
+                    </dd>
+                }
             }
 
             @if (Model.PhotoTagDateTime != "")
@@ -118,24 +158,36 @@
                 </dd>
             }
 
-            @if (Model.PhotoTagImageWidth != "")
+            @if (Model.PhotoTagImageWidth != "" && Model.PhotoTagImageHeight != "")
             {
                 <dt>
-                    Width
+                    Size
                 </dt>
                 <dd>
-                    @Html.DisplayFor(model => model.PhotoTagImageWidth)
+                    @Html.DisplayFor(model => model.PhotoTagImageWidth) x @Html.DisplayFor(model => model.PhotoTagImageHeight)
                 </dd>
             }
-
-            @if (Model.PhotoTagImageHeight != "")
+            else
             {
-                <dt>
-                    Height
-                </dt>
-                <dd>
-                    @Html.DisplayFor(model => model.PhotoTagImageHeight)
-                </dd>
+                @if (Model.PhotoTagImageWidth != "")
+                {
+                    <dt>
+                        Width
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.PhotoTagImageWidth)
+                    </dd>
+                }
+
+                @if (Model.PhotoTagImageHeight != "")
+                {
+                    <dt>
+                        Height
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.PhotoTagImageHeight)
+                    </dd>
+                }
             }
 
             @if (Model.PhotoTagThumbnailEquipModel != "")

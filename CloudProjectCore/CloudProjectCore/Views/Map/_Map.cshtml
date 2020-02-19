@@ -1,0 +1,16 @@
+﻿@model CloudProjectCore.Models.ViewModels.MapModel
+
+<link rel="stylesheet" , type="text/css" href="~/css/mapStyle.css" />
+
+@if (Model.SinglePhoto)
+{
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=&callback=initMap"></script>
+    <script src="~/js/SinglePhotoMap.js"></script>
+}
+else
+{
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=&callback=initMap"></script>
+    <script src="~/js/MultyPhotoMap.js"></script>
+}
+
+<div id="map"></div>
