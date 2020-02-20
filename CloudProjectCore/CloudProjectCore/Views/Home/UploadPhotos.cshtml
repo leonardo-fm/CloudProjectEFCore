@@ -1,4 +1,7 @@
-﻿@model CloudProjectCore.Models.ViewModels.UploadModel
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer _localizer
+
+@model CloudProjectCore.Models.ViewModels.UploadModel
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
@@ -7,7 +10,7 @@
     <div class="form-group">
         <dl>
             <dt>
-                <label>Select an image to be uploaded</label>
+                <label>@_localizer["Select an image to be uploaded"]</label>
             </dt>
             <br />
             <dd>
@@ -15,6 +18,6 @@
                 <span asp-validation-for="@Model.File"></span>
             </dd>
         </dl>
-        <button type="submit" class="btn btn-primary">Upload</button>
+        <button type="submit" class="btn btn-primary">@_localizer["Upload"]</button>
     </div>
 </form>

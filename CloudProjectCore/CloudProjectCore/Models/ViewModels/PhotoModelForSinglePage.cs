@@ -1,14 +1,11 @@
 ﻿using CloudProjectCore.Models.Photo;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations;
 
 namespace CloudProjectCore.Models.ViewModels
 {
     public class PhotoModelForSinglePage : PhotoModel
     {
-        public PhotoModelForSinglePage(){ }
+        public PhotoModelForSinglePage() { }
         public PhotoModelForSinglePage(PhotoModel p)
         {
             _id = p._id;
@@ -25,8 +22,9 @@ namespace CloudProjectCore.Models.ViewModels
             PhotoTagImageWidth = p.PhotoTagImageWidth;
             PhotoTagImageHeight = p.PhotoTagImageHeight;
             PhotoTagThumbnailEquipModel = p.PhotoTagThumbnailEquipModel;
-    }
+        }
 
+        [Display(Name = "Test")]
         public string LPhotoPhatOriginalSizeWithSasKey { get; set; }
         public string UriForSheredImage { get; set; }
     }

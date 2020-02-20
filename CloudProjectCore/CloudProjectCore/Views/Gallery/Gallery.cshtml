@@ -1,4 +1,7 @@
 ﻿@using CloudProjectCore.Models.ViewModels
+@using Microsoft.AspNetCore.Mvc.Localization
+
+@inject IViewLocalizer _localizer
 @model GalleryModel
 
 @{
@@ -7,22 +10,24 @@
 
 <div class="row">
     <div class="col-6">
-        <h2>Gallery</h2>
+        <h2>
+            @_localizer["Gallery"]
+        </h2>
     </div>
     <div class="col-6">
         @if (Model.Photos.Count != 0)
         {
             @if (!Model.MultipleDeletes)
             {
-                @Html.ActionLink("Multiple delete", "Gallery", "Gallery", new { multipleDeletes = true, tag = Model.LastTag },
+                @Html.ActionLink(_localizer["Multiple delete"].Value, "Gallery", "Gallery", new { multipleDeletes = true, tag = Model.LastTag },
                     htmlAttributes: new { @type = "button", @class = "btn btn-danger float-right" })
             }
             else
             {
-                @Html.ActionLink("Back", "Gallery", "Gallery", null,
+                @Html.ActionLink(_localizer["Back"].Value, "Gallery", "Gallery", null,
                     htmlAttributes: new { @type = "button", @class = "btn btn-primary float-right" })
                 <button type="button" class="btn btn-danger float-right mr-2" data-toggle="modal" data-target="#exampleModal">
-                    Delete images
+                    @_localizer["Delete images"]
                 </button>
             }
         }
@@ -35,17 +40,21 @@
         <div>
             @using (Html.BeginForm("Gallery", "Gallery", FormMethod.Get, htmlAttributes: new { @class = "form-inline mr-auto" }))
             {
-                <input class="form-control col-md-4" type="text" placeholder="Tag" aria-label="Search" name="tag">
+                <input class="form-control col-md-4" type="text" placeholder="@_localizer["Tag"]..." aria-label="Search" name="tag">
                 @if (!Model.MultipleDeletes)
                 {
                     <div class="col-md-3 col-sm-12 mt-2 mt-md-0">
-                        <button class="btn btn-success btn-rounded btn-block" type="submit">Search</button>
+                        <button class="btn btn-success btn-rounded btn-block" type="submit">
+                            @_localizer["Search"]
+                        </button>
                     </div>
                 }
                 else
                 {
                     <div class="col-md-3 col-sm-12 mt-2 mt-md-0">
-                        <button class="btn btn-secondary btn-rounded btn-block disabled" type="button">Search</button>
+                        <button class="btn btn-secondary btn-rounded btn-block disabled" type="button">
+                            @_localizer["Search"]
+                        </button>
                     </div>
                 }
             }
@@ -57,7 +66,9 @@
         {
             if (Model.Photos.Count == 0)
             {
-                <p>No photos with the tag "@Model.LastTag"</p>
+                <p>
+                    @_localizer["No photos with the tag"] "@Model.LastTag"
+                </p>
             }
             else
             {
@@ -84,7 +95,7 @@
                 {
                     <!-- Button trigger modal -->
                     <button type="button" class="btn-danger btn-lg btn-block" data-toggle="modal" data-target="#exampleModal">
-                        Delete images
+                        @_localizer["Delete images"]
                     </button>
 
                     <!-- Modal -->
@@ -92,17 +103,23 @@
                         <div class="modal-dialog" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 class="modal-title" id="exampleModalLabel">Delete images</h5>
+                                    <h5 class="modal-title" id="exampleModalLabel">
+                                        @_localizer["Delete images"]
+                                    </h5>
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                         <span aria-hidden="true">&times;</span>
                                     </button>
                                 </div>
                                 <div class="modal-body">
-                                    Are you sure you want to delete those images?
+                                    @_localizer["Are you sure you want to delete those images?"]
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                    <button type="submit" class="btn btn-danger">Delete</button>
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                                        @_localizer["Close"]
+                                    </button>
+                                    <button type="submit" class="btn btn-danger">
+                                        @_localizer["Delete"]
+                                    </button>
                                 </div>
                             </div>
                         </div>

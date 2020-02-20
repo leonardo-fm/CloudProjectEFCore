@@ -1,15 +1,20 @@
-using System;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.EntityFrameworkCore;
-using CloudProjectCore.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using CloudProjectCore.Models;
-using ToolManager.MongoDB;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.Razor;
+using System.Collections.Generic;
+using System.Globalization;
+using Microsoft.AspNetCore.Localization;
+using CloudProjectCore.Data;
+using Microsoft.EntityFrameworkCore;
 using CloudProjectCore.Models.MongoDB;
+using Microsoft.AspNetCore.Identity;
+using System;
+using Microsoft.Extensions.Options;
 
 namespace CloudProjectCore
 {
@@ -25,9 +30,36 @@ namespace CloudProjectCore
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.Configure<CookiePolicyOptions>(options =>
+            {
+                // This lambda determines whether user consent for non-essential cookies is needed for a given request.
+                options.CheckConsentNeeded = context => true;
+                options.MinimumSameSitePolicy = SameSiteMode.None;
+            });
+
+            services.AddMvc()
+                    .AddViewLocalization(opts => { opts.ResourcesPath = "Resources"; })
+                    .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
+                    .AddDataAnnotationsLocalization();
+
+            services.Configure<RequestLocalizationOptions>(opts =>
+            {
+                var supportedCultures = new List<CultureInfo> {
+                    new CultureInfo("en"),
+                    new CultureInfo("it")
+                  };
+
+                opts.DefaultRequestCulture = new RequestCulture("en");
+                // Formatting numbers, dates, etc.
+                opts.SupportedCultures = supportedCultures;
+                // UI strings that we have localized.
+                opts.SupportedUICultures = supportedCultures;
+            });
+
+
             services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(
-                    Configuration.GetConnectionString("DefaultConnection")));
+                    options.UseSqlServer(
+                        Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddSingleton(new MyMongoDBManager(Variables.MongoDBConnectionStringRW, Variables.MongoDBDatbaseName));
             services.AddHttpContextAccessor();
@@ -106,6 +138,9 @@ namespace CloudProjectCore
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+            var options = app.ApplicationServices.GetService<IOptions<RequestLocalizationOptions>>();
+            app.UseRequestLocalization(options.Value);
 
             app.UseEndpoints(endpoints =>
             {

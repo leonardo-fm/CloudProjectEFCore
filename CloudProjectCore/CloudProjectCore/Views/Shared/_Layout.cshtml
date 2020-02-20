@@ -1,4 +1,7 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer _localizer
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -22,13 +25,19 @@
                         @if (User.Identity.IsAuthenticated)
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="UploadPhotos">Upload</a>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="UploadPhotos">
+                                    @_localizer["Upload"]
+                                </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Gallery" asp-action="Gallery">Gallery</a>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Gallery" asp-action="Gallery">
+                                    @_localizer["Gallery"]
+                                </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Map" asp-action="Map">Map</a>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Map" asp-action="Map">
+                                    @_localizer["Map"]
+                                </a>
                             </li>
                         }
                     </ul>
@@ -44,7 +53,14 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2020 - CloudProjectCore - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            <div class="row">
+                <div class="col-sm-6">
+                    &copy; 2020 - CloudProjectCore
+                </div>
+                <div class="col-sm-6 text-right">
+                    @await Html.PartialAsync("_SelectLanguagePartial")
+                </div>
+            </div>
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>

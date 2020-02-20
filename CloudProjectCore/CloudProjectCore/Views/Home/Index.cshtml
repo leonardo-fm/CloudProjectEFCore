@@ -1,4 +1,15 @@
-﻿<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>to my gallery, for the full project click <a href = "https://github.com/GlobalBlackout/CloudProjectEFCore">Here</a></p>
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+
+@inject IViewLocalizer _localizer
+
+<div class="text-center">
+    <h1 class="display-4">
+        @_localizer["Welcome"]
+    </h1>
+    <p>
+        @_localizer["to my gallery, for the full project click"]
+        <a href="https://github.com/GlobalBlackout/CloudProjectEFCore">
+            @_localizer["Here"]
+        </a>
+    </p>
 </div>
