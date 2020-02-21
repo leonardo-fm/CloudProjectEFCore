@@ -47,24 +47,17 @@
             @if (Model.ImageName != "")
             {
                 <dt>
-                    @Html.DisplayNameFor(model => model.ImageName)
+                    @_localizer[Html.DisplayNameFor(model => model.ImageName)]
                 </dt>
                 <dd>
                     @Html.DisplayFor(model => model.ImageName)
                 </dd>
             }
 
-        <dt>
-            @Html.DisplayNameFor(model => model.LPhotoPhatOriginalSizeWithSasKey)
-        </dt>
-            <dd>
-                @Html.DisplayFor(model => model.LPhotoPhatOriginalSizeWithSasKey)
-            </dd>
-
             @if (Model.Description != "")
             {
                 <dt>
-                    @Html.DisplayNameFor(model => model.Description)
+                    @_localizer[Html.DisplayNameFor(model => model.Description)]
                 </dt>
                 <dd>
                     @Html.DisplayFor(model => model.Description)
@@ -74,7 +67,7 @@
             @if (Model.Tags != null && Model.Tags.Count != 0)
             {
                 <dt>
-                    @Html.DisplayNameFor(model => model.Tags)
+                    @_localizer[Html.DisplayNameFor(model => model.Tags)]
                 </dt>
                 <dd>
                     @{
@@ -92,34 +85,34 @@
             @if (Model.PhotoTimeOfUpload != "")
             {
                 <dt>
-                    @Html.DisplayNameFor(model => model.PhotoTimeOfUpload)
+                    @_localizer[Html.DisplayNameFor(model => model.PhotoTimeOfUpload)]
                 </dt>
                 <dd>
                     @Html.DisplayFor(model => model.PhotoTimeOfUpload)
                 </dd>
             }
 
+            <hr />
+            <div class="row">
+                <div class="col-md-1">
+                    <dt>
+                        @_localizer[Html.DisplayNameFor(model => model.PhotoGpsLatitude)]
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.PhotoGpsLatitude)
+                    </dd>
+                </div>
+                <div class="col-md-1">
+                    <dt>
+                        @_localizer[Html.DisplayNameFor(model => model.PhotoGpsLongitude)]
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.PhotoGpsLongitude)
+                    </dd>
+                </div>
+            </div>
             @if (Model.PhotoGpsLatitude != null && Model.PhotoGpsLongitude != null)
             {
-                <hr />
-                <div class="row">
-                    <div class="col-md-1">
-                        <dt>
-                            @Html.DisplayNameFor(model => model.PhotoGpsLatitude)
-                        </dt>
-                        <dd>
-                            @Html.DisplayFor(model => model.PhotoGpsLatitude)
-                        </dd>
-                    </div>
-                    <div class="col-md-1">
-                        <dt>
-                            @Html.DisplayNameFor(model => model.PhotoGpsLongitude)
-                        </dt>
-                        <dd>
-                            @Html.DisplayFor(model => model.PhotoGpsLongitude)
-                        </dd>
-                    </div>
-                </div>
                 <div id="accordion">
                     <div class="card">
                         <div id="headingOne">
@@ -136,33 +129,11 @@
                 </div>
                 <hr />
             }
-            else
-            {
-                @if (Model.PhotoGpsLatitude != null)
-                {
-                    <dt>
-                        @Html.DisplayNameFor(model => model.PhotoGpsLatitude)
-                    </dt>
-                    <dd>
-                        @Html.DisplayFor(model => model.PhotoGpsLatitude)
-                    </dd>
-                }
-
-                @if (Model.PhotoGpsLongitude != null)
-                {
-                    <dt>
-                        @Html.DisplayNameFor(model => model.PhotoGpsLongitude)
-                    </dt>
-                    <dd>
-                        @Html.DisplayFor(model => model.PhotoGpsLongitude)
-                    </dd>
-                }
-            }
 
             @if (Model.PhotoTagDateTime != "")
             {
                 <dt>
-                    @Html.DisplayNameFor(model => model.PhotoTagDateTime)
+                    @_localizer[Html.DisplayNameFor(model => model.PhotoTagDateTime)]
                 </dt>
                 <dd>
                     @Html.DisplayFor(model => model.PhotoTagDateTime)
@@ -183,7 +154,7 @@
                 @if (Model.PhotoTagImageWidth != "")
                 {
                     <dt>
-                        @Html.DisplayNameFor(model => model.PhotoTagImageWidth)
+                        @_localizer[Html.DisplayNameFor(model => model.PhotoTagImageWidth)]
                     </dt>
                     <dd>
                         @Html.DisplayFor(model => model.PhotoTagImageWidth)
@@ -204,7 +175,7 @@
             @if (Model.PhotoTagThumbnailEquipModel != "")
             {
                 <dt>
-                    @Html.DisplayNameFor(model => model.PhotoTagThumbnailEquipModel)
+                    @_localizer[Html.DisplayNameFor(model => model.PhotoTagThumbnailEquipModel)]
                 </dt>
                 <dd>
                     @Html.DisplayFor(model => model.PhotoTagThumbnailEquipModel)

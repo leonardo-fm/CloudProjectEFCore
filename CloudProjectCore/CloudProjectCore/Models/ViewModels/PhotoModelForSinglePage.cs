@@ -24,7 +24,6 @@ namespace CloudProjectCore.Models.ViewModels
             PhotoTagThumbnailEquipModel = p.PhotoTagThumbnailEquipModel;
         }
 
-        [Display(Name = "Test")]
         public string LPhotoPhatOriginalSizeWithSasKey { get; set; }
         public string UriForSheredImage { get; set; }
     }

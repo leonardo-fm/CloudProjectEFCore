@@ -1,4 +1,7 @@
 ﻿@using CloudProjectCore.Models.ViewModels
+@using Microsoft.AspNetCore.Mvc.Localization
+
+@inject IViewLocalizer _localizer
 @model SharePhotoModel
 
 <div class="container">
@@ -6,7 +9,9 @@
     {
         <div class="row">
             <div class="col-md-6">
-                <h4>Share photo</h4>
+                <h4>
+                    @_localizer["Share photo"]
+                </h4>
             </div>
         </div>
 
@@ -18,7 +23,7 @@
 
             <div class="col-md-2">
                 <h6>
-                    @Html.LabelFor(model => model.DateOfExpire, htmlAttributes: new { @class = "control-label" })
+                    @_localizer[Html.DisplayNameFor(model => model.DateOfExpire)]
                 </h6>
             </div>
             <div class="col-md-4 col-sm-12">
@@ -26,7 +31,9 @@
                 @Html.ValidationMessageFor(model => model.DateOfExpire, "", new { @class = "text-danger" })
             </div>
             <div class="col-md-2 col-sm-12 mt-2 mt-md-0">
-                <button type="submit" class="btn btn-success btn-block">Share</button>
+                <button type="submit" class="btn btn-success btn-block">
+                    @_localizer["Share"]
+                </button>
             </div>
         </div>
     }

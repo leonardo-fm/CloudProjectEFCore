@@ -132,11 +132,32 @@
   <data name="Delete image" xml:space="preserve">
     <value>Elimina immagine</value>
   </data>
+  <data name="Description" xml:space="preserve">
+    <value>Descrizione</value>
+  </data>
   <data name="Download" xml:space="preserve">
     <value>Scarica</value>
   </data>
+  <data name="Equip model" xml:space="preserve">
+    <value>Modello della fotocamera</value>
+  </data>
+  <data name="Height" xml:space="preserve">
+    <value>Altezza</value>
+  </data>
   <data name="Image" xml:space="preserve">
     <value>Immagine</value>
+  </data>
+  <data name="Latitude" xml:space="preserve">
+    <value>Latitudine</value>
+  </data>
+  <data name="Longitude" xml:space="preserve">
+    <value>Longitudine</value>
+  </data>
+  <data name="Moment of shot" xml:space="preserve">
+    <value>Momento dello scatto</value>
+  </data>
+  <data name="Name" xml:space="preserve">
+    <value>Nome</value>
   </data>
   <data name="Photo" xml:space="preserve">
     <value>Foto</value>
@@ -146,5 +167,14 @@
   </data>
   <data name="Size" xml:space="preserve">
     <value>Dimensioni</value>
+  </data>
+  <data name="Tags" xml:space="preserve">
+    <value>Etichette</value>
+  </data>
+  <data name="Time of the upload" xml:space="preserve">
+    <value>Momento del caricamento</value>
+  </data>
+  <data name="Width" xml:space="preserve">
+    <value>Larghezza</value>
   </data>
 </root>

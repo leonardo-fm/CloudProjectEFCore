@@ -117,34 +117,22 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Description" xml:space="preserve">
-    <value>Descrizione</value>
+  <data name="Forgot your password?" xml:space="preserve">
+    <value>Dimenticato la password?</value>
   </data>
-  <data name="Equip model" xml:space="preserve">
-    <value>Modello della fotocamera</value>
+  <data name="Log in" xml:space="preserve">
+    <value>Accedi</value>
   </data>
-  <data name="Height" xml:space="preserve">
-    <value>Altezza</value>
+  <data name="Register as new user" xml:space="preserve">
+    <value>Gegistrati come nuovo utente</value>
   </data>
-  <data name="Latitude" xml:space="preserve">
-    <value>Latitudine</value>
+  <data name="Remember me?" xml:space="preserve">
+    <value>Mantieni l'accesso?</value>
   </data>
-  <data name="Longitude" xml:space="preserve">
-    <value>Longitudine</value>
+  <data name="Use a local account to log in." xml:space="preserve">
+    <value>Usa un account locale per accedere.</value>
   </data>
-  <data name="Moment of shot" xml:space="preserve">
-    <value>Momento dello scatto</value>
-  </data>
-  <data name="Name" xml:space="preserve">
-    <value>Nome</value>
-  </data>
-  <data name="Tags" xml:space="preserve">
-    <value>Etichette</value>
-  </data>
-  <data name="Time of the upload" xml:space="preserve">
-    <value>Momento del caricamento</value>
-  </data>
-  <data name="Width" xml:space="preserve">
-    <value>Larghezza</value>
+  <data name="Use anothe service to log in." xml:space="preserve">
+    <value>Utilizza un'altro servizio per accedere.</value>
   </data>
 </root>

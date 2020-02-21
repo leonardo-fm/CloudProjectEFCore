@@ -16,11 +16,6 @@
     <Compile Remove="Data\Migrations\20200206165243_AddEmail.Designer.cs" />
   </ItemGroup>
 
-  <ItemGroup>
-    <EmbeddedResource Remove="Resources\Models\Photo\PhotoModel.it.resx" />
-    <EmbeddedResource Remove="Resources\ViewModels\PhotoModelForSinglePage.it.resx" />
-  </ItemGroup>
-
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="3.1.1" />
@@ -42,14 +37,9 @@
 
 
   <ItemGroup>
-    <Resource Include="Resources\Models\Photo\PhotoModel.it.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Resources\ViewModels\PhotoModelForSinglePage.it.resx">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <Generator>PublicResXFileCodeGenerator</Generator>
-    </Resource>
+    <EmbeddedResource Update="Resources\Areas\Identity\Pages\Account\Login.it.resx">
+      <Generator></Generator>
+    </EmbeddedResource>
   </ItemGroup>
 
 </Project>
