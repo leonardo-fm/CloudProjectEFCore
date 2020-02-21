@@ -10,7 +10,7 @@
 
 ## Setup Project
 
-- Fill **all** the fields and put all the code in a .cs file in the **\CloudProjectEFCore\CloudProjectCore\CloudProjectCore\Models\Variables.cs**, to create the file **Variables.cs** just open a text editor (notepad, Visual studio Code, etc...), copy the code under and fill all the fields, the save the file with the name **Variables.cs** be care it doesn't have any other extension beyond the **.cs**!
+- Fill **all** the fields and put all the code in cs .cs file in the directory **\CloudProjectEFCore\CloudProjectCore\CloudProjectCore\Models\Variables.cs**, copy the code under and fill all the fields, the save the file!
 
 ```C#
 namespace CloudProjectCore.Models
@@ -22,10 +22,12 @@ namespace CloudProjectCore.Models
         
         public static readonly string BlobStorageConnectionString = @"ConnectionStringHere";
         
-        public static readonly string MongoDBConnectionStringRW = @"ConnectionStringHere";
-        public static readonly string MongoDBConnectionStringR = @"ConnectionStringHere";
+        public static readonly string MongoDBConnectionStringRW = @"ConnectionStringHereForReadAndWrite";
         public static readonly string MongoDBDatbaseName = @"DatabaseNameHere";
         public static readonly string MongoDBPhotosCollectionName = @"CollectionNameHere";
+        
+        public static readonly string EmailForSendingEmails = @"";
+        public static readonly string PasswordForEmails = @"";
     }
 }
 ```
