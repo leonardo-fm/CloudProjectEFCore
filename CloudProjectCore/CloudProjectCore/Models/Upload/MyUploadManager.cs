@@ -30,9 +30,9 @@ namespace CloudProjectCore.Models.Upload
 
             using (Stream photo = file.OpenReadStream())
             {
-                CopyStream(photo, photoForBlobStorageOriginalSize);
-                CopyStream(photo, photoForComputerVision);
-                CopyStream(photo, photoStream);
+                photo.CopyStream(photoForBlobStorageOriginalSize);
+                photo.CopyStream(photoForComputerVision);
+                photo.CopyStream(photoStream);
             }
 
             var image = Image.FromStream(photoStream);
@@ -53,7 +53,7 @@ namespace CloudProjectCore.Models.Upload
                 photoForBlobStorageIcon.Seek(0, SeekOrigin.Begin);
 
                 iconImageUploadData = UploadPhotoToBlobStorageAsync
-                (photoForBlobStorageIcon, GetNewNameForStorage(".png"), userId);
+                    (photoForBlobStorageIcon, GetNewNameForStorage(".png"), userId);
             }
 
             var computerVisionresoult = GetTagsAsync(photoForComputerVision);
@@ -92,7 +92,7 @@ namespace CloudProjectCore.Models.Upload
             return await UploadNewPhotoOnMongoDBAsync(photoModel);
         }
 
-        private static void CopyStream(Stream stream, Stream streamDestination)
+        private static void CopyStream(this Stream stream, Stream streamDestination)
         {
             if (stream.Position != 0)
                 stream.Seek(0, SeekOrigin.Begin);
