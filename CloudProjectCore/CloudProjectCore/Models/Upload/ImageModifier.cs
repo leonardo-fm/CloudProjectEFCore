@@ -5,9 +5,9 @@ using System.IO;
 
 namespace CloudProjectCore.Models.Upload
 {
-    public static partial class MyUploadManagerPartial
+    public class ImageModifier
     {
-        private static Bitmap GetTheImageIconForMaps(Bitmap window, Bitmap image)
+        public Bitmap GetTheImageIconForMaps(Bitmap window, Bitmap image)
         {
             Graphics g = Graphics.FromImage(window);
             g.CompositingMode = CompositingMode.SourceCopy;
@@ -15,7 +15,7 @@ namespace CloudProjectCore.Models.Upload
             g.DrawImage(image, new Point(5, 5));
             return window;
         }
-        private static void MakePreview(Image image, Stream streamDestination, Size finalSizeOfImageToCut, Size finalSizeOfImage)
+        public void MakePreview(Image image, Stream streamDestination, Size finalSizeOfImageToCut, Size finalSizeOfImage)
         {
             EncoderParameters ep = new EncoderParameters();
             ep.Param[0] = new EncoderParameter(System.Drawing.Imaging.Encoder.Quality, 0L);
@@ -27,7 +27,7 @@ namespace CloudProjectCore.Models.Upload
             photoPreview.Save(streamDestination, imageEncoder, ep);
             streamDestination.Seek(0, SeekOrigin.Begin);
         }
-        private static Bitmap ResizeImage(Image image, Size finalSizeOfImageToCut, Size finalSizeOfImage)
+        private Bitmap ResizeImage(Image image, Size finalSizeOfImageToCut, Size finalSizeOfImage)
         {
             int imageHeight = (int)((double)finalSizeOfImageToCut.Width / image.Width * image.Height);
             var resizedImage = new Bitmap(image, new Size(finalSizeOfImageToCut.Width, imageHeight));
@@ -47,7 +47,7 @@ namespace CloudProjectCore.Models.Upload
 
             return imageFinal;
         }
-        private static ImageCodecInfo GetEncoder(ImageFormat format)
+        private ImageCodecInfo GetEncoder(ImageFormat format)
         {
             ImageCodecInfo[] codecs = ImageCodecInfo.GetImageDecoders();
             foreach (ImageCodecInfo codec in codecs)

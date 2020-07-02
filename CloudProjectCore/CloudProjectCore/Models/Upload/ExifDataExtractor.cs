@@ -8,9 +8,9 @@ using System.Text;
 
 namespace CloudProjectCore.Models.Upload
 {
-    public static partial class MyUploadManagerPartial
+    public class ExifDataExtractor
     {
-        private static PhotoResponseForExif GetExifDataFromImage(Image photo)
+        public PhotoResponseForExif GetExifDataFromImage(Image photo)
         {
             PhotoResponseForExif responseForExif = new PhotoResponseForExif();
 
@@ -46,7 +46,8 @@ namespace CloudProjectCore.Models.Upload
 
             return responseForExif;
         }
-        private static double GetGPSValues(byte[] value)
+
+        private double GetGPSValues(byte[] value)
         {
             byte[] degrees1 = new byte[] { value[0], value[1], value[2], value[3] };
             byte[] degrees2 = new byte[] { value[4], value[5], value[6], value[7] };
