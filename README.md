@@ -1,5 +1,7 @@
 # [Final project for the cloud course](https://github.com/GlobalBlackout/CloudProjectEFCore)
 
+This software is a cloud-based gallery for photos, is written in ASP.NET Core 3.1.
+
 ## Requirements
 
 - [Gmail Account](https://accounts.google.com/signup/v2/webcreateaccount?flowName=GlifWebSignIn&flowEntry=SignUp) for sending emails
@@ -10,27 +12,8 @@
 
 ## Setup Project
 
-- Fill **all** the fields and put all the code in cs .cs file in the directory **\CloudProjectEFCore\CloudProjectCore\CloudProjectCore\Models\Variables.cs**, copy the code under and fill all the fields, the save the file!
-
-```C#
-namespace CloudProjectCore.Models
-{
-    public static class Variables
-    {
-        public static readonly string ComputerVisionKey = @"KeyHere";
-        public static readonly string ComputerVisionEndpoint = @"EndpointHere";
-        
-        public static readonly string BlobStorageConnectionString = @"ConnectionStringHere";
-        
-        public static readonly string MongoDBConnectionStringRW = @"ConnectionStringHereForReadAndWrite";
-        public static readonly string MongoDBDatbaseName = @"DatabaseNameHere";
-        public static readonly string MongoDBPhotosCollectionName = @"CollectionNameHere";
-        
-        public static readonly string EmailForSendingEmails = @"";
-        public static readonly string PasswordForEmails = @"";
-    }
-}
-```
+- Fill **all** the fields of the file in the directory **CloudProjectEFCore\CloudProjectCore\CloudProjectCore\Models\Variables.cs**.
+- [Create an instance](https://docs.microsoft.com/en-us/azure/cosmos-db/create-mongodb-dotnet) of MongoDB in the Cosmos DB, and then [add a collection](https://docs.microsoft.com/en-us/cli/azure/cosmosdb/mongodb/collection?view=azure-cli-latest) for the photos.
 
 ### Copyright
 
