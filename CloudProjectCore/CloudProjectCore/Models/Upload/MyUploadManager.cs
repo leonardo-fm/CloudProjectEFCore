@@ -48,7 +48,7 @@ namespace CloudProjectCore.Models.Upload
                 imageModifier.MakePreview(image, photoForBlobStorageIcon, new Size(90, 77), new Size(100, 100));
 
                 var imageIcon = (Bitmap)Image.FromStream(photoForBlobStorageIcon);
-                var windowIcon = (Bitmap)Image.FromFile("Data/Icons/IconWindow.png");
+                var windowIcon = (Bitmap)Image.FromFile("~/icons/IconWindow.png");
 
                 photoForBlobStorageIcon.Seek(0, SeekOrigin.Begin);
                 imageModifier.GetTheImageIconForMaps(windowIcon, imageIcon).Save(photoForBlobStorageIcon, ImageFormat.Png);

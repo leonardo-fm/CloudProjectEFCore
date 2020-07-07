@@ -40,7 +40,7 @@ namespace CloudProjectCore.Models.MongoDB
                 if (string.IsNullOrEmpty(tag) || string.IsNullOrWhiteSpace(tag))
                     response = await collectionManager.mongoCollection.FindAsync(x => x.UserId == userId);
                 else
-                    response = await collectionManager.mongoCollection.FindAsync(x => x.Tags.Any(y => y.Equals(tag))
+                    response = await collectionManager.mongoCollection.FindAsync(x => x.Tags.Any(y => y.Equals(tag.ToLower()))
                     && x.UserId == userId);
 
                 response.ToList().ForEach(x => result.Add(new PhotoModelForGallery() { _id = x._id, PhotoPhatPreview = x.PhotoPhatPreview }));

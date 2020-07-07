@@ -30,11 +30,9 @@ namespace CloudProjectCore.Models.DeleteUserData
 
                 if (response.IsSuccess)
                 {
-                    //List<string> photosName = new List<string>();
                     var photos = await myMongoDBManager.GetPhotoForGalleryAsync(_userId);
                     foreach (var photo in photos)
                     {
-                        //photosName.AddRange(await myMongoDBManager.GetPhotosNameAsync(photo._id));
                         myMongoDBManager.RemovePhotoAsync(photo._id);
                     }
                 }
