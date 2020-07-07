@@ -51,7 +51,7 @@ namespace ToolManager.BlobStorage
                 return new Responses(false, true);
             }
         }
-        public string GetContainerSasUri(int minutesToAdd = 1)
+        public string GetContainerSasUri(int minutesToAdd = 30)
         {
             try
             {

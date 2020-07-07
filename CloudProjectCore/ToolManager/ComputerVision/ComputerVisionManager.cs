@@ -29,8 +29,15 @@ namespace ToolManager.ComputerVision
             if (computerVisionConfidence > 1 || computerVisionConfidence < 0)
                 computerVisionConfidence = 0.5;
 
-            var imageAnalysisAsync = await _computerVisionService.AnalyzeImageInStreamAsync(photo, _features);
-            return DisplayResults(imageAnalysisAsync, computerVisionConfidence);
+            try
+            {
+                var imageAnalysisAsync = await _computerVisionService.AnalyzeImageInStreamAsync(photo, _features);
+                return DisplayResults(imageAnalysisAsync, computerVisionConfidence);
+            }
+            catch (Exception)
+            {
+                return new ComputerVisionModelData() { Description = "", Tags = new List<string>() };
+            }
         }
 
         private ComputerVisionModelData DisplayResults(ImageAnalysis analysis, double computerVisionConfidence)

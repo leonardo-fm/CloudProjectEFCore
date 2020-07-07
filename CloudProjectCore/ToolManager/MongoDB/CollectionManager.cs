@@ -33,23 +33,11 @@ namespace ToolManager.MongoDB
                 return new Responses(false, true);
             }
         }
-        public async Task<Responses> RemoveDocumentAsync(T document)
+        public async Task<Responses> RemoveDocumentAsync(ObjectId _id)
         {
             try
             {
-                await mongoCollection.FindOneAndDeleteAsync(x => x._id == document._id);
-                return new Responses(true, false);
-            }
-            catch (Exception)
-            {
-                return new Responses(false, true);
-            }
-        }
-        public async Task<Responses> RemoveDocumentAsync(ObjectId documentId)
-        {
-            try
-            {
-                await mongoCollection.FindOneAndDeleteAsync(x => x._id == documentId);
+                await mongoCollection.FindOneAndDeleteAsync(x => x._id == _id);
                 return new Responses(true, false);
             }
             catch (Exception)
