@@ -18,6 +18,6 @@ This software is a cloud-based gallery for photos, is written in ASP.NET Core 3.
 ### Copyright
 
 The author of this software is 
-[Ferrero-Merlino Leonardo](https://github.com/GlobalBlackout/)
+[Ferrero-Merlino Leonardo](https://github.com/leonardo-fm/)
 
 This software is released under the [Apache License](/LICENSE), Version 2.0.
